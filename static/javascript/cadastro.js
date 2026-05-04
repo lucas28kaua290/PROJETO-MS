@@ -64,7 +64,7 @@
 
         // Step 4 não tem Próximo, tem Atualizar
         avancarStepCarteira();
-        
+
     }
 
     function avancarStepCarteira() {
@@ -400,7 +400,14 @@
             const dados = await response.json();
 
             if (dados.nome) document.getElementById('inome').value = dados.nome;
-            if (dados.data_nascimento) document.getElementById('idataNasc').value = dados.data_nascimento;
+            if (dados.data_nascimento) {
+                // Converte de DD/MM/AAAA para AAAA-MM-DD
+                const partes = dados.data_nascimento.split('/');
+                if (partes.length === 3) {
+                    const dataFormatada = partes[2] + '-' + partes[1] + '-' + partes[0];
+                    document.getElementById('idataNasc').value = dataFormatada;
+                }
+            }
             if (dados.beneficio) document.getElementById('ibeneficio').value = dados.beneficio;
             if (dados.telefone) document.getElementById('itelefone').value = formatarTelefone(dados.telefone);
             if (dados.estado) document.getElementById('estado').value = dados.estado;
