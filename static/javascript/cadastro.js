@@ -478,7 +478,7 @@
                 console.log("Sucesso:", resultado.mensagem);
                 form.reset();
 
-                // NOVO: Volta a tabela para apenas uma linha vazia após o sucesso
+                // Volta a tabela para apenas uma linha vazia após o sucesso
                 const corpoTabela = document.getElementById('corpoTabelaOperacoes');
                 corpoTabela.innerHTML = `
                     <tr class="linha-operacao-item">
@@ -489,6 +489,22 @@
 
                 // Reseta os previews de imagem também
                 document.querySelectorAll('.previewArquivo').forEach(p => p.innerHTML = "");
+
+                // Reset dos steps visuais
+                document.getElementById('step1').style.display = 'block';
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'none';
+                document.getElementById('step4').style.display = 'none';
+                document.getElementById('step5').style.display = 'none';
+
+                stepAtual = 1;
+
+                document.querySelectorAll('.steps .step').forEach((s, i) => {
+                    s.classList.remove('active', 'completed');
+                    if (i === 0) s.classList.add('active');
+                });
+
+                atualizarBotoes();
 
                 // Sua animação de sucesso
                 botaoClicado.textContent = "✅ Cliente cadastrado com sucesso!";
