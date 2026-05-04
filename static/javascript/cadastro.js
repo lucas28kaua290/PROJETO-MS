@@ -100,11 +100,34 @@
 
         stepAtualCarteira--;
 
+        // Se o step 3 foi pulado (clicou "Não"), volta direto pro step 2
+        if (stepAtualCarteira === 3) {
+            const stepEl3 = document.querySelector('.carteira-steps .step[data-step="3"]');
+            // Se o step 3 NÃO tem completed, significa que foi pulado
+            if (!stepEl3.classList.contains('completed')) {
+                // Pula ele também
+                stepAtualCarteira--;
+            }
+        }
+
         const prevStepEl = document.querySelector('.carteira-steps .step[data-step="' + stepAtualCarteira + '"]');
         prevStepEl.classList.remove('completed');
         prevStepEl.classList.add('active');
 
         document.getElementById('stepC' + stepAtualCarteira).style.display = 'block';
+
+        // Se voltou para o step 2, restaura a pergunta
+        if (stepAtualCarteira === 2) {
+            document.getElementById('stepConfirmarAtualizacao').style.display = 'block';
+            document.getElementById('stepDado').style.display = 'none';
+            document.getElementById('stepAtualizar').style.display = 'none';
+            document.getElementById('stepEndereco').style.display = 'none';
+            tipoSelecionado = null;
+            document.getElementById('novoValor').value = '';
+            // Remove completed do step 3 se ele foi pulado
+            const stepEl3 = document.querySelector('.carteira-steps .step[data-step="3"]');
+            stepEl3.classList.remove('completed', 'active');
+        }
 
         atualizarBotoesCarteira();
     }
@@ -694,31 +717,29 @@
     }
 
     function confirmarAtualizacaoCarteira(resposta) {
-        // Esconde a pergunta
         document.getElementById('stepConfirmarAtualizacao').style.display = 'none';
 
         if (resposta === true) {
             vaiAtualizarDado = true;
-           
             document.getElementById('stepDado').style.display = 'block';
             document.getElementById('stepEndereco').style.display = 'none';
             document.getElementById('stepAtualizar').style.display = 'none';
+            avancarStepCarteira();
         } else {
             vaiAtualizarDado = false;
-            // Pula o step 3: marca como completed
-            const stepEl3 = document.querySelector('.carteira-steps .step[data-step="3"]');
-            stepEl3.classList.add('completed');
-            // Mostra direto o step 4
-            document.getElementById('stepC3').style.display = 'none';
+            // Marca step 2 como completed
+            const stepEl2 = document.querySelector('.carteira-steps .step[data-step="2"]');
+            stepEl2.classList.remove('active');
+            stepEl2.classList.add('completed');
+            // NÃO marca step 3 como completed (para sabermos que foi pulado)
+            // Pula direto pro step 4
+            document.getElementById('stepC2').style.display = 'none';
             document.getElementById('stepC4').style.display = 'block';
             stepAtualCarteira = 4;
             const stepEl4 = document.querySelector('.carteira-steps .step[data-step="4"]');
             stepEl4.classList.add('active');
             atualizarBotoesCarteira();
-            return;
         }
-
-        avancarStepCarteira();
     }
 
     function avancarNoStep3() {

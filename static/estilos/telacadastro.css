@@ -5,21 +5,26 @@
     margin-left:120px;
 }
 
-.boxCadastrar{
-    background-color: rgba(211, 211, 211, 0.327);
-    margin-right:20px;
+.boxCadastrar {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    margin-right: 20px;
     margin-top: 133px;
-    max-width:100vw;
-    border-radius:15px;
-    box-shadow:2px 2px 8px rgba(0, 0, 0, 0.463);
+    border-radius: 12px;
+    border-left: 4px solid #eb6505;
 }
 
-.boxCadastrar h2{
-    background-color: #eb6505;
-    text-align: center;
-    padding:8px;
-    border-radius:15px 15px 0px 0px;
-    font-size:1.7em;
+.boxCadastrar h2 {
+    background-color: #f9fafb;
+    color: #eb6505;
+    text-align: left;
+    padding: 14px 20px;
+    border-radius: 12px 12px 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .clientes{
@@ -102,11 +107,13 @@
     gap: 12px 15px; /* ESPAÇO ENTRE LINHAS E COLUNAS */
     margin-bottom: 15px;
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+
 }
 
 .subBoxEderecoClienteNovo{
@@ -114,13 +121,13 @@
     display: grid;
     grid-template-columns: 1fr 1fr; /* 2 COLUNAS */
     gap: 12px 15px; /* ESPAÇO ENTRE LINHAS E COLUNAS */
-    margin-bottom: 15px;
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 .subBoxDocEVideoClienteNovo{
@@ -128,13 +135,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr; /* 2 COLUNAS */
     gap: 12px 15px; /* ESPAÇO ENTRE LINHAS E COLUNAS */
-    margin-bottom: 15px;
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    
+    
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 .dadosPessoaisClienteNovo,
@@ -149,14 +157,29 @@
 .dadosPessoaisClienteNovo h3,
 .enderecoClienteNovo h3,
 .operacoesClienteNovo h3,
-.docEVideosClienteNovo h3,
-.operacoesClienteCarteira h3{
+.docEVideosClienteNovo h3{
     font-size: 0.95rem;
     font-weight: 700;
     color: black;
     padding-bottom: 4px;
     border-bottom: 2px solid #EB721C;
     letter-spacing: 0.5px;
+}
+
+.subBoxOperacoes h4,
+.operacoesClienteCarteira h3,
+.h3ClienteCarteira {
+    background-color: #f9fafb;
+    color: #eb6505;
+    border-left: 4px solid #eb6505;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
 }
 
 .campo,
@@ -177,11 +200,9 @@
 .campo-grande select {
     width: 100%;
     padding: 8px;
-    border-radius:12px;
-    border:1px solid black;
-
-        font-size: 0.95rem;
-
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
     transition: 
         border-color 0.25s ease,
         box-shadow 0.25s ease,
@@ -190,11 +211,9 @@
 
 .campo #tipoConvenio{
     padding:8px;
-    border-radius:12px;
-    border:1px solid black;
-
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
     font-size: 0.95rem;
-
     transition: 
         border-color 0.25s ease,
         box-shadow 0.25s ease,
@@ -475,29 +494,35 @@ select:active,
 
 #stepCPF{
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 #stepConfirmarAtualizacao{
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 #stepConfirmarAtualizacao h4{
-    text-align: center;
-    background-color: #EB721C;
-    margin-top:0px;
-    margin-bottom:15px;
-    padding:6px;
-    border-radius:15px 15px 0px 0px;
+    background-color: #f9fafb;
+    color: #eb6505;
+    border-left: 4px solid #eb6505;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    width: auto;
 }
 
 #stepConfirmarAtualizacao p{
@@ -506,12 +531,21 @@ select:active,
 }
 
 #stepClienteCarteiraRetornado h4{
-    text-align: center;
-    background-color: #EB721C;
-    margin-top:0px;
-    margin-bottom:15px;
-    padding:6px;
-    border-radius:15px 15px 0px 0px;
+    background-color: #f9fafb;
+    color: #eb6505;
+    border-left: 4px solid #eb6505;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: auto;
+    
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 #stepClienteCarteiraRetornado{
@@ -525,10 +559,10 @@ select:active,
 
 .dadoRetornadoNome{
     background-color: white;
-    border:1px solid black;
-    padding:3px 0px 10px 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
     margin-bottom:15px;
-    border-radius:15px;
     color:rgb(89, 89, 89);
     max-width:70%
 }
@@ -541,20 +575,21 @@ select:active,
 
 .dadoRetornadoCPF{
     background-color: white;
-    border:1px solid black;
-    padding:3px 0px 10px 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+
     margin-bottom:15px;
-    border-radius:15px;
     color:rgb(89, 89, 89);
     max-width:100%
 }
 
 .dadoRetornadoDN{
     background-color: white;
-    border:1px solid black;
-    padding:3px 0px 10px 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 12px;
     margin-bottom:15px;
-    border-radius:15px;
     color:rgb(89, 89, 89);
     max-width:100%
 }
@@ -570,24 +605,26 @@ select:active,
 
 #stepDado{
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 #labelClienteCarteira{
-    display:block;
-    width:30vw;
-    text-align: center;
-    background-color: #EB721C;
-    font-size: 1.2em;
-    font-weight: 600;
-    margin-top: 20px;
-    padding: 8px 0px 8px 0px;
-    margin:auto;
-    border-radius:15px
+    background-color: #f9fafb;
+    color: #eb6505;
+    border-left: 4px solid #eb6505;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    width: auto;
 }
 
 .gridAtualizacao {
@@ -599,33 +636,41 @@ select:active,
 
 .gridAtualizacao select {
     padding: 8px;
-    border-radius: 10px;
-    border: 1px solid #000;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
 }
 
 #stepAtualizar{
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 .tituloDadoParaAtualizar{
-    text-align: center;
-    background-color: #EB721C;
-    margin-bottom:15px;
-    padding:6px;
-    border-radius:15px 15px 0px 0px;
+    background-color: #f9fafb;
+    color: #eb6505;
+    border-left: 4px solid #eb6505;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    width: auto;
 }
 
 .cardEndereco {
     background: white;
-    border-radius: 20px;
-    padding: 5px 25px 25px;
-    margin: 20px 0;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 .cardEndereco h4 {
@@ -655,8 +700,8 @@ select:active,
 .campoEndereco input,
 .campoEndereco select {
     padding: 11px 14px;
-    border-radius: 12px;
-    border: none;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
     outline: none;
     font-size: 0.95em;
     border:1px solid black;
@@ -687,35 +732,159 @@ select:active,
 
 #stepOperacao{
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 16px 20px;
+    margin-bottom: 16px;
 }
 
 .subBoxOperacoes{
-    font-size:0.95rem;
+    background-color: #f9fafb;
+    color: #eb6505;
+    border-left: 4px solid #eb6505;
+    border-radius: 0;
+    text-align: left;
+    font-size: 0.78rem;
     font-weight: 700;
-    border-radius:15px 15px 0px 0px;
-    background-color: #EB721C;
-    text-align: center;
-    padding:6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    width: auto;
 }
 
 .docEVideosClienteCarteira{
+    background-color: #f9fafb;
+    color: #eb6505;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-bottom: none;
+}
+
+.docEVideosClienteCarteira .operacoesClienteCarteira h3 {
+    background-color: transparent;
+    color: #eb6505;
+    border-left: none;
+    border-bottom: 2px solid #eb6505;
+    border-radius: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 0 8px 0;
+    margin-bottom: 16px;
+}
+
+#novoValor {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #d1d5db;
+    background: #f9fafb;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+#novoValor:focus {
+    outline: none;
+    border-color: #eb6505;
     background: #fff;
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 14px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow:2px 2px 8px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 3px rgba(235, 101, 5, 0.1);
+}
+
+#novoValor:hover {
+    border-color: #eb6505;
+    background: #fff;
+}
+
+/* Campos de endereço */
+#enderecoEstado,
+#enderecoCidade,
+#enderecoBairro,
+#enderecoRua,
+#enderecoNumero {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid #d1d5db;
+    background: #f9fafb;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    width: 100%;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+#enderecoEstado:focus,
+#enderecoCidade:focus,
+#enderecoBairro:focus,
+#enderecoRua:focus,
+#enderecoNumero:focus {
+    outline: none;
+    border-color: #eb6505;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(235, 101, 5, 0.1);
+}
+
+#enderecoEstado:hover,
+#enderecoCidade:hover,
+#enderecoBairro:hover,
+#enderecoRua:hover,
+#enderecoNumero:hover {
+    border-color: #eb6505;
+    background: #fff;
+}
+
+/* Label do novo valor */
+#labelNovoDado {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+/* Título do step */
+.tituloDadoParaAtualizar {
+    font-size: 1rem;
+    margin-bottom: 16px;
+}
+
+#addLinha {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1.5px solid #eb6505;
+    background: #ffffff;
+    color: #eb6505;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#addLinha:hover {
+    background: #eb6505;
+    color: #ffffff;
 }
 
 .tabela-container {
     max-height: 200px; /* ou o tamanho que quiser */
     overflow-y: auto;
     overflow-x: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .subBoxOperacoesClienteNovo{
@@ -733,22 +902,47 @@ select:active,
     table-layout: fixed;
     border-collapse: collapse;
 }
+.tabelaCadastroOp td {
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+}
 
 .tabelaCadastroOp .th-operacao{
-    width:25%;
-    box-sizing: border-box;
-    background-color: #EB721C;
+    background-color: #f9fafb;
+    color: #eb6505;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .tabelaCadastroOp .th-data{
-    width:20%;
-    box-sizing: border-box;
-    background-color: #EB721C;
+    background-color: #f9fafb;
+    color: #eb6505;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
 }
 .tabelaCadastroOp .th-banco{
-    width:33%;
-    box-sizing: border-box;
-    background-color: #EB721C;
+    background-color: #f9fafb;
+    color: #eb6505;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 #corpoTabelaOperacoes .linha-operacao-item td{
@@ -771,17 +965,29 @@ select:active,
 }
 
 #stepOperacao tr, th, td{
-    border:1px solid black;
-    padding:7px;
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    padding: 10px 12px;
 }
 
 .tabelaOp th{
-    width:40%;
-    background-color: #eb721c;
+    background-color: #f9fafb;
+    color: #eb6505;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.tabelaOp td{
-    padding:0px;
+.tabelaOp tr,
+.tabelaOp td {
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    padding: 10px 12px;
 }
 
 .tabelaOp input{
@@ -817,7 +1023,8 @@ select:active,
 input#icliente{
     padding:6px;
     margin-top:8px;
-    border-radius:8px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
     width:35%;
 }
 

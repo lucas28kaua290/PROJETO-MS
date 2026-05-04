@@ -21,26 +21,31 @@
 }
 
 div.card-grande{
-    background: #12141d;
-    border-radius: 20px;
-    padding: 20px 25px;
-    margin-bottom:0px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 
 h2.titulo-card{
-    font-family:Arial, Helvetica, sans-serif;
-    color: #101115;
-    font-size: 1.4em;
-    text-align:center;
-    background-color: #ff7b1a;
-    max-width:600px;
-    width:90%;
-    margin:auto;
-    margin-bottom: 15px;
-    border-radius: 15px;
-    padding:6px;
-    
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.3em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    background-color: #fff;
+    background-image: linear-gradient(to bottom, #eb6505 5px, transparent 5px);
+    border: 1px solid #d1d5db;
+    padding: 14px 16px 10px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    max-width: 100%;
+    width: auto;
+    text-align: center;
+    letter-spacing: 0.5px;
 }
 
 div.cards-menores{
@@ -49,14 +54,41 @@ div.cards-menores{
 }
 
 div.card{
-    flex:1 1 250px;
+    flex: 1 1 250px;
     min-height: 150px;
-    max-height:255px;
-    background: linear-gradient(135deg, #fb8d20 0%, #ff7b1a 100%);
-    color: white;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
     padding: 20px;
-    border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Borda colorida à esquerda de cada card */
+div.card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 14px 0 0 14px;
+}
+
+/* Primeiro card (Produção) - azul */
+div.card:nth-child(1)::before {
+    background: #2d66f8;
+}
+
+/* Segundo card (Metas) - laranja */
+div.card:nth-child(2)::before {
+    background: #fb8d20;
+}
+
+/* Terceiro card (Regras) - verde */
+div.card:nth-child(3)::before {
+    background: #16a34a;
 }
 
 .card-inner {
@@ -99,17 +131,16 @@ div.card{
     display: block;
     width: 20px;
     height: 2px;
-    background: #fb7020; /* Laranja MS Cred */
-    margin: 4px auto 0;
+    background: #d1d5db;
+    margin: 6px auto 0;
     border-radius: 2px;
 }
 
 div.card:hover{ 
-    border: 1px solid #eb6505;
-    transform: translateX(-5px);
-    transform: translateY(-5px);
-    box-shadow: 2px 2px 8px #eb65055c;
-    transition: 0.3s ease;
+    border-color: #eb6505;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(235, 101, 5, 0.10);
+    transition: 0.25s ease;
 }
 
 .producao-layout{
@@ -147,6 +178,7 @@ div.card:hover{
     max-height: 180px;
     overflow-y: auto;
     padding-right: 8px;
+    color: #374151;
 }
 
 /* Scroll bonito para a legenda */
@@ -172,14 +204,14 @@ div.card:hover{
     gap: 12px;
     font-size: 11px;
     padding: 4px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .legenda-item .legenda-nome {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: rgba(255, 255, 255, 0.9);
+    color: #374151;
     font-weight: 500;
 }
 
@@ -192,12 +224,12 @@ div.card:hover{
 
 .legenda-item .legenda-valor {
     font-weight: 700;
-    color: white;
+    color: #1a1a1a;
     font-size: 11px;
 }
 
 .total-mes-card {
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid #e5e7eb;
     padding-top: 10px;
     margin-top: 4px;
     text-align: right;
@@ -205,7 +237,7 @@ div.card:hover{
 
 .total-mes-card .total-label {
     font-size: 10px;
-    color: rgba(255, 255, 255, 0.7);
+    color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 1px;
     display: block;
@@ -270,7 +302,12 @@ div.card:hover{
 
 /* Ajuste para o título do card */
 .card-inner h3 {
-    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    font-weight: 700;
 }
 
 /* Responsivo para telas pequenas */

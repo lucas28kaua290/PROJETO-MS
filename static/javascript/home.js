@@ -152,7 +152,7 @@ function renderizarGraficoProducao(grupos, total) {
 
     if (grupos.length === 0) {
         if (legendaContainer) {
-            legendaContainer.innerHTML = '<div style="color:rgba(255,255,255,0.6);font-size:12px;text-align:center;">Nenhuma proposta finalizada este mês.</div>';
+            legendaContainer.innerHTML = '<div style="color:#6b7280;font-size:12px;text-align:center;">Nenhuma proposta finalizada este mês.</div>';
         }
         return;
     }
