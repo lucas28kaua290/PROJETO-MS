@@ -452,6 +452,12 @@
         })
 
         formData.append('operacoes_json', JSON.stringify(operacoes));
+
+        // DEBUG: ver o que está sendo enviado
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        
         // Pegamos o botão para fazer a animação de sucesso depois
         const botaoClicado = document.getElementById('botaoClicado');
 
