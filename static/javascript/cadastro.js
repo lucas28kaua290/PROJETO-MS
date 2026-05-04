@@ -432,8 +432,14 @@
         event.preventDefault(); 
         
         const form = document.getElementById('formClienteNovo');
-        const formData = new FormData(form); // Isso captura os textos E os arquivos (rg_frente, etc)
+        const formData = new FormData(form);
 
+        // Remove máscara do CPF
+        const cpfComMascara = formData.get('cpf');
+        if (cpfComMascara) {
+            formData.set('cpf', cpfComMascara.replace(/\D/g, ''));
+        }
+        
         const operacoes = [];
         const linhas = document.querySelectorAll('#corpoTabelaOperacoes .linha-operacao-item');
 
@@ -457,7 +463,7 @@
         for (let pair of formData.entries()) {
             console.log(pair[0] + ': ' + pair[1]);
         }
-        
+
         // Pegamos o botão para fazer a animação de sucesso depois
         const botaoClicado = document.getElementById('botaoClicado');
 
