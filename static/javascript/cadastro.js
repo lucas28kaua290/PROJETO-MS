@@ -464,9 +464,6 @@
             console.log(pair[0] + ': ' + pair[1]);
         }
 
-        // Pegamos o botão para fazer a animação de sucesso depois
-        const botaoClicado = document.getElementById('botaoClicado');
-
         try {
             const response = await fetch("https://sistemamscred.com.br/clientes", {
                 method: "POST",
@@ -476,7 +473,7 @@
             const resultado = await response.json();
             console.log('STATUS:', response.status);
             console.log('RESPOSTA:', resultado);
-            
+
             if (response.ok) {
                 console.log("Sucesso:", resultado.mensagem);
                 form.reset();
