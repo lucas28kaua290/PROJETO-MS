@@ -364,23 +364,22 @@ div.metames>h3, h1, p{
 
 .meta-item {
     display: flex;
-    justify-content: space-between; /* Texto na esquerda, Valor na direita */
+    justify-content: space-between;
     align-items: center;
     padding: 8px 12px;
-    background: #f8f9fa;      /* Fundo cinza bem clarinho */
+    background: #fff;
     border-radius: 10px;
-    border-left: 4px solid #ddd; /* Bordinha padrão */
+    border: 1px solid #d1d5db;
+    border-left: 4px solid #d1d5db;
     transition: all 0.3s ease;
 }
 
-/* Design específico para a Meta Geral */
 .meta-item:has(#meta-geral-home) {
-    border-left-color: #fb5e20; /* Laranja MS Cred */
+    border-left: 4px solid #fb5e20;
 }
 
-/* Design específico para a Meta Individual */
 .meta-item:has(#meta-individual-home) {
-    border-left-color: #2ecc71; /* Verde Meta */
+    border-left: 4px solid #2ecc71;
 }
 
 .meta-item span {
@@ -451,12 +450,13 @@ div.bancomes> h3, h4 {
     background: #1a1c24;
     color: #fb8d20;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1.5fr;
     padding: 10px;
     font-size: 0.7rem;
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
+    border-bottom: 2px solid #e5e7eb;
 }
 
 /* Área de Scroll */
@@ -487,8 +487,8 @@ div.bancomes> h3, h4 {
 /* Linhas da Tabela */
 .regra-linha {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    padding: 12px 10px;
+    grid-template-columns: 1fr 1fr 1.5fr;
+    padding: 10px 10px;
     border-bottom: 1px solid #f0f0f0;
     font-size: 0.75rem;
     color: #333;
