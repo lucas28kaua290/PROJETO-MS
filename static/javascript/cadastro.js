@@ -439,7 +439,7 @@
         if (cpfComMascara) {
             formData.set('cpf', cpfComMascara.replace(/\D/g, ''));
         }
-        
+
         const operacoes = [];
         const linhas = document.querySelectorAll('#corpoTabelaOperacoes .linha-operacao-item');
 
@@ -474,7 +474,9 @@
             });
 
             const resultado = await response.json();
-
+            console.log('STATUS:', response.status);
+            console.log('RESPOSTA:', resultado);
+            
             if (response.ok) {
                 console.log("Sucesso:", resultado.mensagem);
                 form.reset();
