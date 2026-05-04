@@ -299,7 +299,7 @@ function preencherDetalhes(cliente) {
     document.querySelector('.telaDetalhesCliente').style.display = 'none';
     document.querySelector('.telaRetornoConsulta').style.display = 'block';
   }
-  
+
   function abrefecha(botao, url = null){
     const bloco=botao.parentElement;
     const img=bloco.querySelector('.doc-imagem');
@@ -319,4 +319,170 @@ function preencherDetalhes(cliente) {
 
     // 2. Agora sim, manda para a tela de login
     window.location.replace("telalogin.html"); 
+}
+
+function gerarFichaPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const laranja = [235, 101, 5];
+    const cinzaClaro = [245, 245, 245];
+    const textoPrimario = [26, 26, 26];
+    const textoSecundario = [107, 114, 128];
+
+    let y = 0;
+
+    // Cabeçalho
+    doc.setFillColor(...laranja);
+    doc.rect(0, 0, 210, 28, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('MSCred Correspondente', 14, 12);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Ficha do Cliente', 14, 20);
+    const dataHoje = new Date().toLocaleDateString('pt-BR');
+    doc.text(`Gerado em: ${dataHoje}`, 196, 20, { align: 'right' });
+
+    y = 38;
+
+    // Nome em destaque
+    const nome = document.getElementById('det_nome').textContent;
+    doc.setTextColor(...textoPrimario);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(nome, 14, y);
+    y += 10;
+
+    // Função auxiliar pra desenhar seção
+    function desenharSecao(titulo, campos, yInicio) {
+        // Título da seção
+        doc.setFillColor(...cinzaClaro);
+        doc.rect(14, yInicio, 182, 7, 'F');
+        doc.setDrawColor(...laranja);
+        doc.setLineWidth(0.8);
+        doc.line(14, yInicio, 14, yInicio + 7);
+        doc.setTextColor(...laranja);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'bold');
+        doc.text(titulo.toUpperCase(), 18, yInicio + 5);
+
+        let yAtual = yInicio + 13;
+
+        campos.forEach(([label, valor], i) => {
+            // fundo zebrado
+            if (i % 2 === 0) {
+                doc.setFillColor(252, 252, 252);
+                doc.rect(14, yAtual - 5, 182, 9, 'F');
+            }
+            doc.setTextColor(...textoSecundario);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text(label, 18, yAtual);
+
+            doc.setTextColor(...textoPrimario);
+            doc.setFont('helvetica', 'bold');
+            doc.text(valor || '---', 196, yAtual, { align: 'right' });
+
+            // linha separadora fina
+            doc.setDrawColor(235, 235, 235);
+            doc.setLineWidth(0.2);
+            doc.line(14, yAtual + 3, 196, yAtual + 3);
+
+            yAtual += 10;
+        });
+
+        return yAtual + 4;
+    }
+
+    // Dados pessoais
+    y = desenharSecao('Dados Pessoais', [
+        ['CPF',               document.getElementById('det_cpf').textContent],
+        ['Data de Nascimento', document.getElementById('det_nascimento').textContent],
+        ['N° Benefício',      document.getElementById('det_beneficio').textContent],
+    ], y);
+
+    // Contato e acesso
+    y = desenharSecao('Contato e Acesso', [
+        ['Telefone',   document.getElementById('det_telefone').textContent],
+        ['Senha INSS', document.getElementById('det_senha').textContent],
+    ], y);
+
+    // Endereço
+    y = desenharSecao('Endereço', [
+        ['Estado', document.getElementById('det_estado').textContent],
+        ['Cidade', document.getElementById('det_cidade').textContent],
+        ['Bairro', document.getElementById('det_bairro').textContent],
+        ['Rua',    document.getElementById('det_rua').textContent],
+    ], y);
+
+    // Operações recentes
+    const linhasOp = document.querySelectorAll('#tabelaOperacoesCliente tr');
+
+    // Título da seção operações
+    doc.setFillColor(...cinzaClaro);
+    doc.rect(14, y, 182, 7, 'F');
+    doc.setDrawColor(...laranja);
+    doc.setLineWidth(0.8);
+    doc.line(14, y, 14, y + 7);
+    doc.setTextColor(...laranja);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('OPERAÇÕES RECENTES', 18, y + 5);
+    y += 13;
+
+    if (linhasOp.length === 0) {
+        doc.setTextColor(...textoSecundario);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Nenhuma operação registrada', 18, y);
+        y += 10;
+    } else {
+        // Cabeçalho da tabela
+        doc.setFillColor(...laranja);
+        doc.rect(14, y - 5, 182, 8, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(7.5);
+        doc.setFont('helvetica', 'bold');
+        doc.text('OPERAÇÃO', 18, y);
+        doc.text('DATA', 100, y, { align: 'center' });
+        doc.text('BANCO / PROMOTORA', 192, y, { align: 'right' });
+        y += 8;
+
+        linhasOp.forEach((tr, i) => {
+            const tds = tr.querySelectorAll('td');
+            if (tds.length < 3) return;
+
+            if (i % 2 === 0) {
+                doc.setFillColor(252, 252, 252);
+                doc.rect(14, y - 5, 182, 9, 'F');
+            }
+
+            doc.setTextColor(...textoPrimario);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text(tds[0].textContent || '---', 18, y);
+            doc.text(tds[1].textContent || '---', 100, y, { align: 'center' });
+            doc.text(tds[2].textContent || '---', 192, y, { align: 'right' });
+
+            doc.setDrawColor(235, 235, 235);
+            doc.setLineWidth(0.2);
+            doc.line(14, y + 3, 196, y + 3);
+
+            y += 10;
+        });
+    }
+
+    // Rodapé
+    doc.setDrawColor(...laranja);
+    doc.setLineWidth(0.5);
+    doc.line(14, 285, 196, 285);
+    doc.setTextColor(...textoSecundario);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Documento gerado pelo Sistema MSCred — uso interno', 105, 290, { align: 'center' });
+
+    // Salva
+    const nomeArquivo = `ficha_${nome.replace(/\s+/g, '_').toLowerCase()}.pdf`;
+    doc.save(nomeArquivo);
 }

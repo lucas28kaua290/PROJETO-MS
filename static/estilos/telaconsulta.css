@@ -488,11 +488,18 @@ div.cliente-info{
 }
 
 /* Botão voltar */
-.btn-voltar-wrap { margin-bottom: 14px; }
-.btn-voltar {
-    display: inline-flex;
+.btn-voltar-wrap {
+    display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.btn-voltar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
     background: none;
     border: none;
     color: #eb6505;
@@ -502,8 +509,26 @@ div.cliente-info{
     padding: 4px 0;
     transition: opacity 0.2s ease;
 }
+
 .btn-voltar i { font-size: 18px; }
 .btn-voltar:hover { opacity: 0.75; }
+
+.btn-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 7px 16px;
+    transition: background-color 0.2s ease;
+}
+.btn-pdf i { font-size: 18px; }
+.btn-pdf:hover { background-color: #b91c1c; }
 
 /* Avatar + topo do card */
 .cliente-topo {
