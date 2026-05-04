@@ -94,15 +94,46 @@
         <div class="boxCadastrar">
             <h2>CADASTRO/ATUALIZAÇÃO</h2>
 
-            <div class="clientes">
-                <div class="clienteNovo">
-                    <button class="btnClienteNovo" onclick="abreFechaNovo()">
-                        <h3>CLIENTE NOVO</h3>
-                    </button>
+            <!-- SWITCH NOVO / CARTEIRA -->
+            <div class="switch-container" id="switchModo">
+                <button class="switch-option active" data-modo="novo">👤 Novo Cadastro</button>
+                <button class="switch-option" data-modo="carteira">📋 Atualizar Cadastro</button>
+            </div>
 
-                    <div class="conteudoClienteNovo">
-                        <form id="formClienteNovo" action="#" onsubmit="cadClienteNovo(event)">
-                            <!--NOME-->
+            <div class="clientes">
+                <div class="clienteNovo" id="blocoNovo">
+                    <!-- INDICADOR DE STEPS -->
+                    <div class="steps">
+                        <div class="step active" data-step="1">
+                            <span class="step-number">1</span>
+                            <span class="step-label">Dados</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="2">
+                            <span class="step-number">2</span>
+                            <span class="step-label">Endereço</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="3">
+                            <span class="step-number">3</span>
+                            <span class="step-label">Operações</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="4">
+                            <span class="step-number">4</span>
+                            <span class="step-label">Documentos</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="5">
+                            <span class="step-number">5</span>
+                            <span class="step-label">Confirmar</span>
+                        </div>
+                    </div>
+                    <form id="formClienteNovo" action="#" onsubmit="cadClienteNovo(event)">
+        
+                        <!-- STEP 1: DADOS PESSOAIS + ENDEREÇO -->
+                        <div class="step-content" id="step1">
+                            <!-- DADOS PESSOAIS -->
                             <div class="subBoxDadosPessoaisClienteNovo">
                                 <div class="dadosPessoaisClienteNovo">
                                     <h3 class="h3ClienteNovo">Dados Pessoais</h3>
@@ -153,27 +184,30 @@
                                         <option value="SERV. PÚBLICO MUN">SERV. PÚBLICO MUN</option>
                                         <option value="SERV. PÚBLICO EST">SERV. PÚBLICO EST</option>
                                         <option value="CLT">CLT</option>
-					<option value="fgts">FGTS</option>
-					<option value="forcas">FORÇAS ARMADAS</option>
-					<option value="bolsaFamilia">BOLSA FAMÍLIA</option>
-					<option value="crefaz">CREFAZ</option>
+                                        <option value="fgts">FGTS</option>
+                                        <option value="forcas">FORÇAS ARMADAS</option>
+                                        <option value="bolsaFamilia">BOLSA FAMÍLIA</option>
+                                        <option value="crefaz">CREFAZ</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <!--ENDEREÇO-->
-                            <!--ESTADO-->
+                        </div>
+
+                        <!-- STEP 2: ENDEREÇO -->
+                        <div class="step-content" id="step2" style="display:none;">
+
                             <div class="subBoxEderecoClienteNovo">
                                 <div class="enderecoClienteNovo">
                                     <h3 class="h3ClienteNovo">Endereço</h3>
                                 </div>
+                                <!--ESTADO-->
                                 <div class="campo-grande">
                                     <label for="estado">Estado</label>
                                     <select name="estado" id="estado" required autocomplete="on">
                                         <option value="">Selecione o estado</option>
                                     </select>
                                 </div>
-                                <!-- FIM ESTADO-->
                                 <!--CIDADE-->
                                 <div class="campo-grande">
                                     <label for="cidade">Cidade</label>
@@ -199,8 +233,11 @@
                                         autocomplete="on">
                                 </div>
                             </div>
-                            <!--OPERAÇÕES RECENTES-->
-                            <!--PRODUTO-->
+
+                        </div>
+
+                        <!-- STEP 3: OPERAÇÕES -->
+                        <div class="step-content" id="step3" style="display:none;">
                             <div class="subBoxOperacoesClienteNovo" id="containerOperacoes">
                                 <div class="operacoesClienteNovo">
                                     <h3 class="h3ClienteNovo">Operações Feitas</h3>
@@ -236,89 +273,183 @@
                                     + Adicionar Outra Operação
                                 </button>
                             </div>
+                        </div>
 
-                                <!--ÁREA DE DOCUMENTOS E VÍDEOS-->
+                        <!-- STEP 4: DOCUMENTOS E VÍDEO -->
+                        <div class="step-content" id="step4" style="display:none;">
                             <div class="subBoxDocEVideoClienteNovo">
                                 <div class="docEVideosClienteNovo">
                                     <h3 class="h3ClienteNovo">Documentos e vídeo</h3>
-                                    
-                                        <!--DOCUMENTO FRENTE-->
-                                        <label class="tituloDocCliente">DOC FRENTE</label>
-                                        <label class="inputDocCliente" for="iDocFrenteClienteNovo">
-                                            <input
-                                                type="file"
-                                                id="iDocFrenteClienteNovo"
-                                                name="docFrenteClienteNovo"
-                                                accept="image/*,.pdf"
-                                                onchange="previewArquivo(this, 'previewDocFrenteClienteNovo')"
-                                            >
-                                            <div class="conteudoUpload">
-                                                <i class="material-symbols-outlined" id="simboloUploadDocFrente">upload</i>
-                                                <span class="indicarDoc">Clique ou arraste o arquivo</span>
-                                                <div class="previewArquivo" id="previewDocFrenteClienteNovo"></div>
-                                            </div>
-                                        </label>
-                                        <!--DOCUMENTO VERSO-->
-                                        <label class="tituloDocCliente">DOC VERSO</label>
-                                        <label class="inputDocCliente" for="iDocVersoClienteNovo">
-                                            <input
-                                                type="file"
-                                                id="iDocVersoClienteNovo"
-                                                name="docVersoClienteNovo"
-                                                accept="image/*,.pdf"
-                                                onchange="previewArquivo(this, 'previewDocVersoClienteNovo')"
-                                                >
-                                            <div class="conteudoUpload">
-                                                <i class="material-symbols-outlined" id="simboloUploadDocVerso">upload</i>
-                                                <span class="indicarDoc">Clique ou arraste o arquivo</span>
-                                                <div class="previewArquivo" id="previewDocVersoClienteNovo"></div>
-                                            </div>
-                                        </label>
-                                        <!--VIDEO CLIENTE-->
-                                        <label class="tituloDocCliente">VIDEO CLIENTE</label>
-                                        <label class="inputDocCliente" for="iVideoClienteNovo">
-                                            <input
+
+                                    <!--DOCUMENTO FRENTE-->
+                                    <label class="tituloDocCliente">DOC FRENTE</label>
+                                    <label class="inputDocCliente" for="iDocFrenteClienteNovo">
+                                        <input
+                                            type="file"
+                                            id="iDocFrenteClienteNovo"
+                                            name="docFrenteClienteNovo"
+                                            accept="image/*,.pdf"
+                                            onchange="previewArquivo(this, 'previewDocFrenteClienteNovo')"
+                                        >
+                                        <div class="conteudoUpload">
+                                            <i class="material-symbols-outlined" id="simboloUploadDocFrente">upload</i>
+                                            <span class="indicarDoc">Clique ou arraste o arquivo</span>
+                                            <div class="previewArquivo" id="previewDocFrenteClienteNovo"></div>
+                                        </div>
+                                    </label>
+
+                                    <!--DOCUMENTO VERSO-->
+                                    <label class="tituloDocCliente">DOC VERSO</label>
+                                    <label class="inputDocCliente" for="iDocVersoClienteNovo">
+                                        <input
+                                            type="file"
+                                            id="iDocVersoClienteNovo"
+                                            name="docVersoClienteNovo"
+                                            accept="image/*,.pdf"
+                                            onchange="previewArquivo(this, 'previewDocVersoClienteNovo')"
+                                        >
+                                        <div class="conteudoUpload">
+                                            <i class="material-symbols-outlined" id="simboloUploadDocVerso">upload</i>
+                                            <span class="indicarDoc">Clique ou arraste o arquivo</span>
+                                            <div class="previewArquivo" id="previewDocVersoClienteNovo"></div>
+                                        </div>
+                                    </label>
+
+                                    <!--VIDEO CLIENTE-->
+                                    <label class="tituloDocCliente">VIDEO CLIENTE</label>
+                                    <label class="inputDocCliente" for="iVideoClienteNovo">
+                                        <input
                                             type="file"
                                             id="iVideoClienteNovo"
                                             name="VideoClienteNovo"
                                             accept="video/*"
                                             onchange="previewArquivo(this, 'previewVideoClienteNovo')"
-                                            >
-                                            <div class="conteudoUpload">
-                                                <i class="material-symbols-outlined" id="simboloUploadVideo">upload</i>
-                                                <span class="indicarDoc">Clique ou arraste o arquivo</span>
-                                                <div class="previewArquivo" id="previewVideoClienteNovo"></div>
-                                            </div>
-                                        </label>
-                                    
+                                        >
+                                        <div class="conteudoUpload">
+                                            <i class="material-symbols-outlined" id="simboloUploadVideo">upload</i>
+                                            <span class="indicarDoc">Clique ou arraste o arquivo</span>
+                                            <div class="previewArquivo" id="previewVideoClienteNovo"></div>
+                                        </div>
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 5: CONFIRMAÇÃO -->
+                        <div class="step-content" id="step5" style="display:none;">
+                            <div class="subBoxDadosPessoaisClienteNovo">
+                                <div class="dadosPessoaisClienteNovo">
+                                    <h3 class="h3ClienteNovo">Confirme os dados</h3>
+                                </div>
+                                <p style="grid-column:1/-1;color:#5a6a7a;margin-bottom:10px;">
+                                    Revise as informações abaixo antes de cadastrar.
+                                </p>
+
+                                <!-- Resumo Dados Pessoais -->
+                                <div class="campo-grande" style="grid-column:1/-1;">
+                                    <div class="resumo-linha"><strong>Nome:</strong> <span id="resNome">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>CPF:</strong> <span id="resCpf">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Nascimento:</strong> <span id="resNasc">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Benefício:</strong> <span id="resBeneficio">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Telefone:</strong> <span id="resTelefone">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Convênio:</strong> <span id="resConvenio">—</span></div>
                                 </div>
                             </div>
 
-                        </form>
+                            <div class="subBoxEderecoClienteNovo">
+                                <div class="enderecoClienteNovo">
+                                    <h3 class="h3ClienteNovo">Endereço</h3>
+                                </div>
+                                <div class="campo-grande" style="grid-column:1/-1;">
+                                    <div class="resumo-linha"><strong>Estado:</strong> <span id="resEstado">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Cidade:</strong> <span id="resCidade">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Bairro:</strong> <span id="resBairro">—</span></div>
+                                </div>
+                                <div class="campo-grande">
+                                    <div class="resumo-linha"><strong>Rua:</strong> <span id="resRua">—</span></div>
+                                </div>
+                                <div class="campo">
+                                    <div class="resumo-linha"><strong>Número:</strong> <span id="resNumero">—</span></div>
+                                </div>
+                            </div>
 
-                        <input type="submit" value="Cadastrar" class="cadastroClienteNovo" form="formClienteNovo">
+                            <div class="subBoxOperacoesClienteNovo">
+                                <div class="operacoesClienteNovo">
+                                    <h3 class="h3ClienteNovo">Operações</h3>
+                                </div>
+                                <p style="grid-column:1/-1;color:#5a6a7a;" id="resOperacoes">Nenhuma operação adicionada.</p>
+                            </div>
 
-                    </div>
-                    <h4 id="botaoClicado"></h4>
+                            <div class="subBoxDocEVideoClienteNovo">
+                                <div class="docEVideosClienteNovo">
+                                    <h3 class="h3ClienteNovo">Documentos</h3>
+                                </div>
+                                <p style="grid-column:1/-1;color:#5a6a7a;" id="resDocumentos">Nenhum documento enviado.</p>
+                            </div>
+                        </div>
+
+                        <!-- BOTÕES DE NAVEGAÇÃO -->
+                        <div class="step-botoes">
+                            <button type="button" class="btn-voltar" id="btnVoltar" onclick="stepAnterior()" style="display:none;">← Voltar</button>
+                            <button type="button" class="btn-proximo" id="btnProximo" onclick="proximoStep()">Próximo →</button>
+                            <input type="submit" value="Cadastrar" class="cadastroClienteNovo" id="btnCadastrar" style="display:none;">
+                        </div>
+
+                    </form>
                 </div>
+                    
+                
+                <div class="clienteCarteira" id="blocoCarteira" style="display:none;">
+                    <!-- INDICADOR DE STEPS DA CARTEIRA -->
+                    <div class="steps carteira-steps">
+                        <div class="step active" data-step="1">
+                            <span class="step-number">1</span>
+                            <span class="step-label">Buscar</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="2">
+                            <span class="step-number">2</span>
+                            <span class="step-label">Dados</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="3">
+                            <span class="step-number">3</span>
+                            <span class="step-label">Atualizar</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="step" data-step="4">
+                            <span class="step-number">4</span>
+                            <span class="step-label">Finalizar</span>
+                        </div>
+                    </div>
 
-                <div class="clienteCarteira">
-
-                    <button class="btnClienteCarteira" onclick="abreFechaCarteira()">
-                        <h3>CLIENTE CARTEIRA</h3>
-                    </button>
-
-                    <div class="conteudoClienteCarteira">
-
-                        <!-- Passo 1: Digitar CPF -->
-                        <div id="stepCPF" style="display:block;">
+                    <!-- STEP CARTEIRA 1: BUSCAR CPF -->
+                    <div class="step-content" id="stepC1" style="display:block;">
+                        <div id="stepCPF">
                             <label for="icliente">Digite o CPF do cliente que deseja atualizar:</label>
                             <input type="text" name="cliente" id="icliente" placeholder="000.000.000-00" required
                                 minlength="11" maxlength="14" oninput="this.value = formatarCPF(this.value)">
-                            <button onclick="proximoPasso(1)">Próximo</button>
                         </div>
+                    </div>
 
-                        <div id="stepClienteCarteiraRetornado" style="display:none;">
+                    <!-- STEP CARTEIRA 2: DADOS RETORNADOS -->
+                    <div class="step-content" id="stepC2" style="display:none;">
+                        <div id="stepClienteCarteiraRetornado">
                             <h4>Cliente Retornado</h4>
                             <div class="dadoRetornadoNome">
                                 <h5>Nome:</h5>
@@ -336,20 +467,20 @@
                             </div>
                         </div>
 
-                        <div id="stepConfirmarAtualizacao" style="display:none;">
+                        <div id="stepConfirmarAtualizacao">
                             <h4>Atualização de dados</h4>
                             <p>Deseja atualizar algum dado deste cliente?</p>
-
                             <div class="botoesConfirmacao">
-                                <button onclick="confirmarAtualizacao(true)">Sim</button>
-                                <button onclick="confirmarAtualizacao(false)">Não</button>
+                                <button onclick="confirmarAtualizacaoCarteira(true)" class="btn-sim">Sim</button>
+                                <button onclick="confirmarAtualizacaoCarteira(false)" class="btn-nao">Não</button>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Passo 2: Selecionar dado -->
-                        <div id="stepDado" style="display:none;">
+                    <!-- STEP CARTEIRA 3: ATUALIZAR DADO -->
+                    <div class="step-content" id="stepC3" style="display:none;">
+                        <div id="stepDado">
                             <label for="tipoAtualizacaoDadoCliente" id="labelClienteCarteira">Dado para Atualizar</label>
-
                             <div class="gridAtualizacao">
                                 <select name="atualizar" id="tipoAtualizacaoDadoCliente" class="linhaAtualizacao">
                                     <option value="">Selecione</option>
@@ -360,14 +491,11 @@
                                     <option value="senhaINSS">Senha INSS</option>
                                     <option value="endereco">Endereço</option>
                                 </select>
-                                <button onclick="proximoPasso(2)" class="btnProximoDoDado">Próximo</button>
                             </div>
                         </div>
 
-                        <!-- Passo 2.5: Atualizar endereço completo -->
                         <div id="stepEndereco" class="cardEndereco" style="display: none;">
                             <h4 class="tituloDadoParaAtualizar">Atualizar Endereço</h4>
-
                             <div class="grupoEndereco">
                                 <div class="campoEndereco">
                                     <label for="enderecoEstado">Estado</label>
@@ -375,22 +503,18 @@
                                         <option value="">Selecione</option>
                                     </select>
                                 </div>
-
                                 <div class="campoEndereco">
                                     <label>Cidade</label>
                                     <input type="text" id="enderecoCidade" placeholder="Ex: São Paulo">
                                 </div>
-
                                 <div class="campoEndereco">
                                     <label>Bairro</label>
                                     <input type="text" id="enderecoBairro" placeholder="Ex: Centro">
                                 </div>
-
                                 <div class="campoEndereco campoRua">
                                     <label>Rua</label>
                                     <input type="text" id="enderecoRua" placeholder="Ex: Rua das Flores">
                                 </div>
-
                                 <div class="campoEndereco campoNumero">
                                     <label>Número</label>
                                     <input type="text" id="enderecoNumero" placeholder="123">
@@ -398,17 +522,17 @@
                             </div>
                         </div>
 
-
-                        <!-- Passo 3: Atualizar dado -->
                         <div id="stepAtualizar" style="display: none;">
                             <h4 class="tituloDadoParaAtualizar">Dado para atualizar:</h4>
                             <label id="labelNovoDado" for="novoValor">Novo valor:</label>
                             <input type="text" id="novoValor">
                             <select id="selectEstado" style="display: none;"></select>
                         </div>
+                    </div>
 
-
-                        <div id="stepOperacao" style="display: none;">
+                    <!-- STEP CARTEIRA 4: OPERAÇÕES + DOCS + FINALIZAR -->
+                    <div class="step-content" id="stepC4" style="display:none;">
+                        <div id="stepOperacao">
                             <div class="subBoxOperacoes">
                                 <h4>Operações feitas</h4>
                             </div>
@@ -439,102 +563,65 @@
                                     </tbody>
                                 </table>
                             </div>
-
                             <div class="acoesOperacao">
                                 <button id="addLinha">+ Adicionar Outra Operação</button>
                             </div>
                         </div>
 
-                        
-                        <!--ÁREA DE DOCUMENTOS E VÍDEOS-->
-                            <div class="docEVideosClienteCarteira" style="display:none;">
-
-                                <div class="operacoesClienteCarteira">
-                                    <h3 class="h3ClienteCarteira">Documentos e vídeo</h3>
-                                </div>
-
-                                <form action="#">
-                                    <!--DOCUMENTO FRENTE-->
-                                    <label class="tituloDocCliente">DOC FRENTE</label>
-
-                                    <label class="inputDocCliente" for="iDocFrenteClienteCarteira">
-                                        <input
-                                            type="file"
-                                            name="docFrente" 
-                                            id="iDocFrenteClienteCarteira" 
-                                            accept="image/*,.pdf" 
-                                            onchange="previewArquivo(this, 'previewDocFrente')"
-                                        >
-
-                                        <div class="conteudoUpload">
-                                            <i class="material-symbols-outlined" id="simboloUploadDocFrenteCarteira">upload</i>
-                                            <span class="indicarDoc">Clique ou arraste o arquivo</span>
-                                            <div class="previewArquivo" id="previewDocFrente"></div>
-                                            <span id="statusFrente" style="color: blue; font-size: 12px;"></span>
-                                            <a id="linkFrente" href="#" target="_blank" style="display: none;">Visualizar atual</a>
-                                        </div>
-
-                                    </label>
-
-                                    
-
-                                    
-
-                                    <!--DOCUMENTO VERSO-->
-                                    <label class="tituloDocCliente">DOC VERSO</label>
-
-                                    <label class="inputDocCliente" for="iDocVersoClienteCarteira">
-                                        <input
-                                            type="file" 
-                                            name="docVerso"
-                                            id="iDocVersoClienteCarteira" 
-                                            accept="image/*,.pdf" 
-                                            onchange="previewArquivo(this, 'previewDocVerso')"
-                                        >
-
-                                        <div class="conteudoUpload">
-                                            <i class="material-symbols-outlined" id="simboloUploadDocVersoCarteira">upload</i>
-                                            <span class="indicarDoc">Clique ou arraste o arquivo</span>
-                                            <div class="previewArquivo" id="previewDocVerso"></div>
-                                            <span id="statusVerso" style="color: blue; font-size: 12px;"></span>
-                                            <a id="linkVerso" href="#" target="_blank" style="display: none;">Visualizar atual</a>
-                                        </div>
-
-                                        
-                                    </label>
-
-                                    
-
-                                    <!--VIDEO CLIENTE-->
-                                    <label class="tituloDocCliente">VIDEO CLIENTE</label>
-
-                                    <label class="inputDocCliente" for="iVideoClienteCarteira">
-                                        <input
-                                            type="file" 
-                                            name="videoCliente"
-                                            id="iVideoClienteCarteira" 
-                                            accept="video/*" 
-                                            onchange="previewArquivo(this, 'previewVideo')"
-                                        >
-                                        <div class="conteudoUpload">
-                                            <i class="material-symbols-outlined" id="simboloUploadVideoCarteira">upload</i>
-                                            <span class="indicarDoc">Clique ou arraste o arquivo</span>
-                                            <div class="previewArquivo" id="previewVideo"></div>
-                                            <span id="statusVideo" style="color: blue; font-size: 12px;"></span>
-                                            <a id="linkVideo" href="#" target="_blank" style="display: none;">Visualizar atual</a>
-                                        </div>
-                                    </label>
-
-                                    
-                                </form>
-                                
-                                <div class="acoesOperacao">
-                                    <button onclick="atualizarDado()" class="btnAtualizar">Atualizar</button>
-                                </div>
+                        <div class="docEVideosClienteCarteira">
+                            <div class="operacoesClienteCarteira">
+                                <h3 class="h3ClienteCarteira">Documentos e vídeo</h3>
                             </div>
-
-
+                            <form action="#">
+                                <!--DOCUMENTO FRENTE-->
+                                <label class="tituloDocCliente">DOC FRENTE</label>
+                                <label class="inputDocCliente" for="iDocFrenteClienteCarteira">
+                                    <input type="file" name="docFrente" id="iDocFrenteClienteCarteira" 
+                                        accept="image/*,.pdf" onchange="previewArquivo(this, 'previewDocFrente')">
+                                    <div class="conteudoUpload">
+                                        <i class="material-symbols-outlined" id="simboloUploadDocFrenteCarteira">upload</i>
+                                        <span class="indicarDoc">Clique ou arraste o arquivo</span>
+                                        <div class="previewArquivo" id="previewDocFrente"></div>
+                                        <span id="statusFrente" style="color: blue; font-size: 12px;"></span>
+                                        <a id="linkFrente" href="#" target="_blank" style="display: none;">Visualizar atual</a>
+                                    </div>
+                                </label>
+                                <!--DOCUMENTO VERSO-->
+                                <label class="tituloDocCliente">DOC VERSO</label>
+                                <label class="inputDocCliente" for="iDocVersoClienteCarteira">
+                                    <input type="file" name="docVerso" id="iDocVersoClienteCarteira" 
+                                        accept="image/*,.pdf" onchange="previewArquivo(this, 'previewDocVerso')">
+                                    <div class="conteudoUpload">
+                                        <i class="material-symbols-outlined" id="simboloUploadDocVersoCarteira">upload</i>
+                                        <span class="indicarDoc">Clique ou arraste o arquivo</span>
+                                        <div class="previewArquivo" id="previewDocVerso"></div>
+                                        <span id="statusVerso" style="color: blue; font-size: 12px;"></span>
+                                        <a id="linkVerso" href="#" target="_blank" style="display: none;">Visualizar atual</a>
+                                    </div>
+                                </label>
+                                <!--VIDEO CLIENTE-->
+                                <label class="tituloDocCliente">VIDEO CLIENTE</label>
+                                <label class="inputDocCliente" for="iVideoClienteCarteira">
+                                    <input type="file" name="videoCliente" id="iVideoClienteCarteira" 
+                                        accept="video/*" onchange="previewArquivo(this, 'previewVideo')">
+                                    <div class="conteudoUpload">
+                                        <i class="material-symbols-outlined" id="simboloUploadVideoCarteira">upload</i>
+                                        <span class="indicarDoc">Clique ou arraste o arquivo</span>
+                                        <div class="previewArquivo" id="previewVideo"></div>
+                                        <span id="statusVideo" style="color: blue; font-size: 12px;"></span>
+                                        <a id="linkVideo" href="#" target="_blank" style="display: none;">Visualizar atual</a>
+                                    </div>
+                                </label>
+                            </form>
+                        </div>
                     </div>
+                    <!-- BOTÕES DE NAVEGAÇÃO DA CARTEIRA -->
+                    <div class="step-botoes carteira-botoes">
+                        <button type="button" class="btn-voltar" id="btnVoltarCarteira" onclick="stepAnteriorCarteira()" style="display:none;">← Voltar</button>
+                        <button type="button" class="btn-proximo" id="btnProximoCarteira" onclick="proximoStepCarteira()">Próximo →</button>
+                        <button type="button" class="btn-accent" id="btnAtualizarCarteira" onclick="atualizarDado()" style="display:none;">Atualizar</button>
+                    </div>
+
                     <h4 id="mensagemAtualizacao"></h4>
                 </div>
             </div>

@@ -10,7 +10,6 @@
     margin-right:20px;
     margin-top: 133px;
     max-width:100vw;
-    max-height: 585px;
     border-radius:15px;
     box-shadow:2px 2px 8px rgba(0, 0, 0, 0.463);
 }
@@ -25,25 +24,24 @@
 
 .clientes{
     display: flex;
-    gap:100px;              /* espaço entre as divs */
+    gap: 20px;
     justify-content: center;
-
     padding: 5px 20px 20px 20px;
+    width: 100%;
 }
 
 .clienteNovo{
     display: flex;
     flex-direction: column;
-    width:600px;
+    width: 100%;
+    max-width: 100%;
 }
 
-.btnClienteNovo,
-.btnClienteCarteira{
-    background-color: #eb6505;
-    border: none;
-    border-radius: 15px 15px 0 0;
-    cursor: pointer;
-    box-shadow:2px 2px 8px rgba(0, 0, 0, 0.463);
+.clienteCarteira{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
 }
 
 #loadingOverlay {
@@ -88,69 +86,6 @@
     to { transform: rotate(360deg); }
 }
 
-.btnClienteNovo:hover,
-.btnClienteCarteira:hover{
-    filter: brightness(1.08);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.18);
-    transform: translateY(-1px);
-}
-
-.btnClienteNovo:active,
-.btnClienteCarteira:active{
-    transform: translateY(1px) scale(0.98);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-}
-
-.btnClienteNovo:focus-visible,
-.btnClienteCarteira:focus-visible{
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(235, 101, 5, 0.5);
-}
-
-.clienteNovo h3{
-    background-color:#eb721c;
-    text-align:center;
-    border-radius:15px 15px 0px 0px;
-    padding:6px;
-    font-size:1.6em;
-}
-
-.conteudoClienteNovo,
-.conteudoClienteCarteira{
-    background-color: rgba(211, 211, 211, 0.327);
-    box-shadow:2px 2px 8px rgba(0, 0, 0, 0.463);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease; /* AJUSTA */
-    border-radius:0px 0px 15px 15px;
-    padding: 0; /* ADICIONA ISSO */
-    
-}
-
-.conteudoClienteNovo.aberto{
-    max-height: 388px; /* maior que o conteúdo */
-    padding:15px;
-    opacity: 1;
-}
-
-.conteudoClienteCarteira.aberto{
-    max-height: 388px; /* ajustado pro conteúdo menor */
-    overflow-y:auto;
-    overflow-x:hidden;
-    padding:15px;
-    opacity: 1;
-}
-
-.conteudoClienteCarteira {
-    transition: max-height 0.2s cubic-bezier(0.4, 0, 0.2, 1), padding 0.2s ease;
-}
-
-.clienteCarteira{
-    display: flex;
-    flex-direction: column;
-    width:600px;
-}
-
 
 .clienteCarteira h3{
     background-color:#eb721c;
@@ -158,17 +93,6 @@
     border-radius:15px 15px 0px 0px;
     padding:6px;
     font-size:1.6em;
-}
-
-.conteudoClienteNovo {
-    width: 100%;
-}
-
-.conteudoClienteNovo form {
-    max-height: 300px;       /* <<< AJUSTA AQUI */
-    overflow-y: auto;
-
-    padding-right: 6px;     /* espaço pro scroll não colar */
 }
 
 .subBoxDadosPessoaisClienteNovo{
@@ -547,71 +471,6 @@ select:active,
 @keyframes tempo {
     from { width: 100%; }
     to { width: 0%; }
-}
-
-/* Estilos pra carteira - labels */
-.conteudoClienteCarteira label {
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-/* Estilos pra carteira - inputs e selects */
-.conteudoClienteCarteira input,
-.conteudoClienteCarteira select {
-    width: 100%;
-    padding: 8px;
-    border-radius: 12px;
-    border: 1px solid black;
-    font-size: 0.95rem;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-}
-.conteudoClienteCarteira input:hover,
-.conteudoClienteCarteira select:hover {
-    border-color: #eb6505;
-    background-color: #f8faff;
-}
-
-.conteudoClienteCarteira input:focus,
-.conteudoClienteCarteira select:focus {
-    outline: none;
-    border-color: #eb6505;
-    box-shadow: 0 0 0 3px #eb650524;
-    background-color: #ffffff;
-}
-
-.conteudoClienteCarteira input:active,
-.conteudoClienteCarteira select:active {
-    transform: scale(0.995);
-}
-
-/* Estilos pra carteira - botões */
-.conteudoClienteCarteira button {
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: none;
-    background-color: #eb5d05;
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin-top: 10px;
-    align-self: flex-start; /* pra não ocupar 100% */
-}
-
-.conteudoClienteCarteira button:hover {
-    filter: brightness(1.1);
-    box-shadow: 2px 2px 8px #eb5d057e;
-    transform: translateY(-1px);
-}
-
-.conteudoClienteCarteira button:active {
-    transform: scale(0.98);
-}
-
-.conteudoClienteCarteira,
-.inputClienteAtualizar{
-    display:flex;
-    flex-direction: column;
 }
 
 #stepCPF{
@@ -1001,6 +860,308 @@ footer div{
     margin:15px;
 }
 
+/* ============================================= */
+/* NOVO: STEPS (INDICADOR DE PROGRESSO)          */
+/* ============================================= */
+
+.steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: default;
+    transition: color 0.3s ease;
+}
+
+.step .step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    background: #e2e8f0;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.step .step-label {
+    white-space: nowrap;
+}
+
+/* Step ativo (atual) */
+.step.active {
+    color: #eb6505;
+}
+.step.active .step-number {
+    background: #eb6505;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(235, 101, 5, 0.15);
+}
+
+/* Step concluído */
+.step.completed {
+    color: #16a34a;
+}
+.step.completed .step-number {
+    background: #16a34a;
+    color: #fff;
+}
+
+/* Conector entre steps */
+.step-connector {
+    width: 28px;
+    height: 2px;
+    background: #e2e8f0;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+}
+.step.completed + .step-connector {
+    background: #16a34a;
+}
+
+/* ============================================= */
+/* NOVO: STEP CONTENT (ÁREA DE CADA ETAPA)       */
+/* ============================================= */
+
+.step-content {
+    animation: fadeSlideIn 0.35s ease;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================= */
+/* NOVO: BOTÕES DE NAVEGAÇÃO                     */
+/* ============================================= */
+
+.step-botoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+}
+
+.btn-voltar {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    background: #fff;
+    color: #475569;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-voltar:hover {
+    border-color: #eb6505;
+    color: #eb6505;
+    background: #fef7f2;
+    transform: translateX(-2px);
+}
+
+.btn-voltar:active {
+    transform: scale(0.97);
+}
+
+.btn-proximo {
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    background: #eb6505;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-proximo:hover {
+    background: #d45a04;
+    box-shadow: 0 4px 12px rgba(235, 101, 5, 0.3);
+    transform: translateX(2px);
+}
+
+.btn-proximo:active {
+    transform: scale(0.97);
+}
+
+/* ============================================= */
+/* NOVO: LINHAS DE RESUMO (STEP 4)               */
+/* ============================================= */
+
+.resumo-linha {
+    padding: 6px 0;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.resumo-linha strong {
+    color: #0f172a;
+}
+
+.resumo-linha span {
+    color: #64748b;
+}
+
+/* ============================================= */
+/* NOVO: SWITCH (NOVO CADASTRO / ATUALIZAR)      */
+/* ============================================= */
+
+.switch-container {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    background: #f1f5f9;
+    border-radius: 30px;
+    padding: 5px;
+    margin: 0 auto 20px auto;
+    width: fit-content;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.switch-option {
+    padding: 10px 22px;
+    border-radius: 26px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.88rem;
+    transition: all 0.25s ease;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.switch-option.active {
+    background: #fff;
+    color: #eb6505;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.switch-option:hover:not(.active) {
+    color: #334155;
+    background: rgba(255,255,255,0.5);
+}
+
+
+/* ============================================= */
+/* NOVO: STEPS DA CARTEIRA (MESMA BASE)           */
+/* ============================================= */
+
+.carteira-steps {
+    margin-bottom: 20px;
+}
+
+.carteira-botoes {
+    margin-top: 20px;
+}
+
+.btn-accent {
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    background: #eb6505;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-accent:hover {
+    background: #d45a04;
+    box-shadow: 0 4px 12px rgba(235, 101, 5, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-accent:active {
+    transform: scale(0.97);
+}
+
+/* ============================================= */
+/* BOTÕES SIM / NÃO                              */
+/* ============================================= */
+
+.botoesConfirmacao {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.btn-sim {
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    background: #16a34a;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-sim:hover {
+    background: #15803d;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-nao {
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: 1.5px solid #cbd5e1;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+.btn-nao:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+    transform: translateY(-1px);
+}
+
+.btn-sim:active,
+.btn-nao:active {
+    transform: scale(0.97);
+}
+
 /* Media Queries para telas menores */
 @media screen and (max-width: 768px) {
     
@@ -1177,7 +1338,7 @@ footer div{
         width: 95%;
     }
 
-    .conteudoClienteNovo.aberto, .conteudoClienteCarteira.aberto {
-        padding: 10px;
+    .step-content {
+        padding: 0;
     }
 }

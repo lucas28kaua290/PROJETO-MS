@@ -3,6 +3,168 @@
     const menuToggle = document.getElementById('menuToggle');
     const overlay = document.getElementById('overlay');
     let vaiAtualizarDado = true;
+    let stepAtual = 1;
+    const totalSteps = 5;
+    let stepAtualCarteira = 1;
+    const totalStepsCarteira = 4;
+
+
+    function proximoStepCarteira() {
+        if (stepAtualCarteira === 1) {
+            const cpfRaw = document.getElementById('icliente').value;
+            const cpfNumeros = cpfRaw.replace(/\D/g, '');
+            if (cpfNumeros.length !== 11) {
+                alert('Digite um CPF válido!');
+                return;
+            }
+            proximoPasso(1);
+            return;
+        }
+
+        // Step 2: navegação é pelos botões Sim/Não, não pelo Próximo
+        if (stepAtualCarteira === 2) {
+            return;
+        }
+
+        // Step 3: executar lógica de seleção do dado E/OU validar antes de avançar
+        if (stepAtualCarteira === 3) {
+            const dadoSelecionado = document.getElementById('tipoAtualizacaoDadoCliente').value;
+
+            // Se ainda não escolheu nada, executa a lógica de mostrar o campo
+            if (!tipoSelecionado) {
+                if (!dadoSelecionado) {
+                    alert('Selecione um dado para atualizar!');
+                    return;
+                }
+                avancarNoStep3();
+                return;
+            }
+
+            // Se já escolheu, valida o preenchimento
+            if (tipoSelecionado === 'endereco') {
+                const estado = document.getElementById('enderecoEstado').value;
+                const cidade = document.getElementById('enderecoCidade').value;
+                const bairro = document.getElementById('enderecoBairro').value;
+                const rua = document.getElementById('enderecoRua').value;
+                const numero = document.getElementById('enderecoNumero').value;
+                if (!estado || !cidade || !bairro || !rua || !numero) {
+                    alert('Preencha todos os campos de endereço!');
+                    return;
+                }
+            } else {
+                if (!document.getElementById('novoValor').value) {
+                    alert('Preencha o novo valor!');
+                    return;
+                }
+            }
+
+            avancarStepCarteira();
+            return;
+        }
+
+        // Step 4 não tem Próximo, tem Atualizar
+        avancarStepCarteira();
+        
+    }
+
+    function avancarStepCarteira() {
+        // Esconde step atual
+        document.getElementById('stepC' + stepAtualCarteira).style.display = 'none';
+
+        // Marca como completed
+        const stepEl = document.querySelector('.carteira-steps .step[data-step="' + stepAtualCarteira + '"]');
+        stepEl.classList.remove('active');
+        stepEl.classList.add('completed');
+
+        // Avança
+        stepAtualCarteira++;
+
+        // Mostra próximo
+        document.getElementById('stepC' + stepAtualCarteira).style.display = 'block';
+
+        // Marca como active
+        const nextStepEl = document.querySelector('.carteira-steps .step[data-step="' + stepAtualCarteira + '"]');
+        nextStepEl.classList.add('active');
+
+        // Atualiza botões
+        atualizarBotoesCarteira();
+    }
+
+    function stepAnteriorCarteira() {
+        if (stepAtualCarteira <= 1) return;
+
+        document.getElementById('stepC' + stepAtualCarteira).style.display = 'none';
+
+        const stepEl = document.querySelector('.carteira-steps .step[data-step="' + stepAtualCarteira + '"]');
+        stepEl.classList.remove('active');
+
+        stepAtualCarteira--;
+
+        const prevStepEl = document.querySelector('.carteira-steps .step[data-step="' + stepAtualCarteira + '"]');
+        prevStepEl.classList.remove('completed');
+        prevStepEl.classList.add('active');
+
+        document.getElementById('stepC' + stepAtualCarteira).style.display = 'block';
+
+        atualizarBotoesCarteira();
+    }
+
+    function atualizarBotoesCarteira() {
+        const btnVoltar = document.getElementById('btnVoltarCarteira');
+        const btnProximo = document.getElementById('btnProximoCarteira');
+        const btnAtualizarFinal = document.getElementById('btnAtualizarCarteira');
+
+        // Botão Voltar
+        if (stepAtualCarteira === 1) {
+            btnVoltar.style.display = 'none';
+        } else {
+            btnVoltar.style.display = 'inline-block';
+        }
+
+        // Step 2: esconde Próximo (a navegação é pelos botões Sim/Não)
+        if (stepAtualCarteira === 2) {
+            btnProximo.style.display = 'none';
+            btnAtualizarFinal.style.display = 'none';
+            return;
+        }
+
+        // Step 4: mostra Atualizar, esconde Próximo
+        if (stepAtualCarteira === totalStepsCarteira) {
+            btnProximo.style.display = 'none';
+            btnAtualizarFinal.style.display = 'inline-block';
+        } else {
+            btnProximo.style.display = 'inline-block';
+            btnAtualizarFinal.style.display = 'none';
+        }
+    }
+
+    // =============================================
+    // NOVO: CONTROLE DO SWITCH (NOVO / CARTEIRA)
+    // =============================================
+
+    const switchOptions = document.querySelectorAll('#switchModo .switch-option');
+    const blocoNovo = document.getElementById('blocoNovo');
+    const blocoCarteira = document.getElementById('blocoCarteira');
+
+    switchOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active de todos
+            switchOptions.forEach(opt => opt.classList.remove('active'));
+            // Adiciona active no clicado
+            this.classList.add('active');
+
+            const modo = this.dataset.modo;
+
+            if (modo === 'novo') {
+                blocoNovo.style.display = 'flex';
+                blocoCarteira.style.display = 'none';
+            } else {
+                blocoNovo.style.display = 'none';
+                blocoCarteira.style.display = 'flex';
+            }
+        });
+    });
+
 
     // Função para formatar CPF
     function formatarCPF(cpf) {
@@ -59,23 +221,8 @@
         });
     }
 
-    const conteudoClienteNovo=document.querySelector('.conteudoClienteNovo')
-    const conteudoClienteCarteira=document.querySelector('.conteudoClienteCarteira')
-
     let tipoSelecionado; // variável para armazenar o tipo de dado selecionado
     let parteEndereco; // variável para armazenar a parte do endereço
-
-    function abreFechaNovo(){
-    console.log('clicado cliente novo!')
-        conteudoClienteNovo.classList.toggle('aberto')
-        // Para mobile, ativa overlay se sidebar aberta, mas aqui é pra divs
-        // Talvez não, pois overlay é pra sidebar
-    }
-
-    function abreFechaCarteira(){
-    console.log('clicado cliente carteira!')
-        conteudoClienteCarteira.classList.toggle('aberto')
-    }
 
     const estados = [
     "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia",
@@ -98,7 +245,133 @@
         selectEstado.appendChild(option)
     })
     }
-   
+
+    function proximoStep() {
+        //validação simples dos campos obrigatórios do step atual
+
+        if (stepAtual === 1) {
+            const cpf = document.getElementById('icpf').value;
+            const nome = document.getElementById('inome').value;
+            const dataNasc = document.getElementById('idataNasc').value;
+            const beneficio = document.getElementById('ibeneficio').value;
+            const telefone = document.getElementById('itelefone').value;
+            const senha = document.getElementById('senhaInss').value;
+            const convenio = document.getElementById('tipoConvenio').value;
+
+            if (!cpf || !nome || !dataNasc || !beneficio || !telefone || !senha || !convenio) {
+                alert('Preencha todos os campos obrigatórios antes de avançar.');
+                return;
+            }
+        }
+
+        if (stepAtual === 2) {
+            const estado = document.getElementById('estado').value;
+            const cidade = document.getElementById('cidade').value;
+            const bairro = document.getElementById('bairro').value;
+            const rua = document.getElementById('irua').value;
+            const numero = document.getElementById('inumero').value;
+
+            if (!estado || !cidade || !bairro || !rua || !numero) {
+                alert('Preencha todos os campos de endereço antes de avançar.');
+                return;
+            }
+        }
+
+        document.getElementById('step' + stepAtual).style.display = 'none';
+
+        document.querySelector('.step[data-step="' + stepAtual + '"]').classList.remove('active');
+        document.querySelector('.step[data-step="' + stepAtual + '"]').classList.add('completed');
+
+        stepAtual++;
+
+        document.getElementById('step' + stepAtual).style.display = 'block';
+
+        document.querySelector('.step[data-step="' + stepAtual + '"]').classList.add('active');
+        atualizarBotoes();
+
+        if (stepAtual === 5) {
+            preencherResumo();
+        }
+
+    }
+
+    function stepAnterior() {
+        if (stepAtual <= 1) return;
+
+        document.getElementById('step' + stepAtual).style.display = 'none';
+        document.querySelector('.step[data-step="' + stepAtual + '"]').classList.remove('active');
+        stepAtual--;
+
+        document.querySelector('.step[data-step="' + stepAtual + '"]').classList.remove('completed');
+        document.querySelector('.step[data-step="' + stepAtual + '"]').classList.add('active');
+
+        document.getElementById('step' + stepAtual).style.display = 'block';
+
+        atualizarBotoes();
+    }
+
+    function atualizarBotoes() {
+        const btnVoltar = document.getElementById('btnVoltar');
+        const btnProximo = document.getElementById('btnProximo');
+        const btnCadastrar = document.getElementById('btnCadastrar');
+
+        if (stepAtual === 1) {
+            btnVoltar.style.display = 'none';
+        } else {
+            btnVoltar.style.display = 'inline-block';
+        }
+
+        if (stepAtual === totalSteps) {
+            btnProximo.style.display = 'none';
+            btnCadastrar.style.display = 'inline-block';
+        } else {
+            btnProximo.style.display = 'inline-block';
+            btnCadastrar.style.display = 'none';
+        }
+    }
+
+    function preencherResumo() {
+        // Dados Pessoais
+        document.getElementById('resNome').textContent = document.getElementById('inome').value || '—';
+        document.getElementById('resCpf').textContent = document.getElementById('icpf').value || '—';
+        document.getElementById('resNasc').textContent = document.getElementById('idataNasc').value || '—';
+        document.getElementById('resBeneficio').textContent = document.getElementById('ibeneficio').value || '—';
+        document.getElementById('resTelefone').textContent = document.getElementById('itelefone').value || '—';
+        document.getElementById('resConvenio').textContent = document.getElementById('tipoConvenio').value || '—';
+
+        // Endereço
+        document.getElementById('resEstado').textContent = document.getElementById('estado').value || '—';
+        document.getElementById('resCidade').textContent = document.getElementById('cidade').value || '—';
+        document.getElementById('resBairro').textContent = document.getElementById('bairro').value || '—';
+        document.getElementById('resRua').textContent = document.getElementById('irua').value || '—';
+        document.getElementById('resNumero').textContent = document.getElementById('inumero').value || '—';
+
+        // Operações
+        const linhas = document.querySelectorAll('#corpoTabelaOperacoes .linha-operacao-item');
+        let temOperacao = false;
+        let htmlOps = '';
+        linhas.forEach((linha, index) => {
+            const tipo = linha.querySelector('.ioperacao').value;
+            const data = linha.querySelector('.dataProd').value;
+            const banco = linha.querySelector('.bancoProd').value;
+            if (tipo.trim() !== '') {
+                temOperacao = true;
+                htmlOps += `<div style="margin-bottom:4px;">• <strong>${tipo}</strong> — ${data || 'sem data'} — ${banco || 'não informado'}</div>`;
+            }
+        });
+        document.getElementById('resOperacoes').innerHTML = temOperacao ? htmlOps : 'Nenhuma operação adicionada.';
+
+        // Documentos
+        const docFrente = document.getElementById('iDocFrenteClienteNovo').files[0];
+        const docVerso = document.getElementById('iDocVersoClienteNovo').files[0];
+        const video = document.getElementById('iVideoClienteNovo').files[0];
+        let htmlDocs = '';
+        if (docFrente) htmlDocs += `<div>• 📄 RG Frente: ${docFrente.name}</div>`;
+        if (docVerso) htmlDocs += `<div>• 📄 RG Verso: ${docVerso.name}</div>`;
+        if (video) htmlDocs += `<div>• 🎥 Vídeo: ${video.name}</div>`;
+        document.getElementById('resDocumentos').innerHTML = htmlDocs || 'Nenhum documento enviado.';
+    }
+
     function mostrarLoading(ativo) {
         let overlay = document.getElementById('loadingOverlay');
         if (!overlay) {
@@ -279,9 +552,7 @@
                     document.querySelector('.dadoRetornadoCPF p').textContent = formatarCPF(cliente.cpf);
                     document.querySelector('.dadoRetornadoDN p').textContent = cliente.data_nascimento;
 
-                    document.getElementById('stepCPF').style.display = "none";
-                    document.getElementById('stepClienteCarteiraRetornado').style.display = "block";
-                    document.getElementById('stepConfirmarAtualizacao').style.display = "block";
+                    avancarStepCarteira();
                 } else {
                     alert("Cliente não encontrado na base!");
                 }
@@ -388,25 +659,80 @@
         }
     }
 
-    function confirmarAtualizacao(resposta) {
-
+    function confirmarAtualizacaoCarteira(resposta) {
+        // Esconde a pergunta
         document.getElementById('stepConfirmarAtualizacao').style.display = 'none';
 
         if (resposta === true) {
             vaiAtualizarDado = true;
-            // SIM → escolher dado
+           
             document.getElementById('stepDado').style.display = 'block';
-            document.getElementById('stepOperacao').style.display = 'none';
-            document.querySelector('.docEVideosClienteCarteira').style.display = 'none';
-        } 
-        else {
-            vaiAtualizarDado = false;
-            // NÃO → vai direto pra operações + docs
-            document.getElementById('stepDado').style.display = 'none';
+            document.getElementById('stepEndereco').style.display = 'none';
             document.getElementById('stepAtualizar').style.display = 'none';
+        } else {
+            vaiAtualizarDado = false;
+            // Pula o step 3: marca como completed
+            const stepEl3 = document.querySelector('.carteira-steps .step[data-step="3"]');
+            stepEl3.classList.add('completed');
+            // Mostra direto o step 4
+            document.getElementById('stepC3').style.display = 'none';
+            document.getElementById('stepC4').style.display = 'block';
+            stepAtualCarteira = 4;
+            const stepEl4 = document.querySelector('.carteira-steps .step[data-step="4"]');
+            stepEl4.classList.add('active');
+            atualizarBotoesCarteira();
+            return;
+        }
 
-            document.getElementById('stepOperacao').style.display = 'block';
-            document.querySelector('.docEVideosClienteCarteira').style.display = 'block';
+        avancarStepCarteira();
+    }
+
+    function avancarNoStep3() {
+        const dadoSelecionado = document.getElementById('tipoAtualizacaoDadoCliente').value;
+        if (!dadoSelecionado) {
+            alert('Selecione um dado para atualizar!');
+            return;
+        }
+        tipoSelecionado = dadoSelecionado;
+
+        if (tipoSelecionado === 'endereco') {
+            document.getElementById('stepDado').style.display = 'none';
+            document.getElementById('stepEndereco').style.display = 'block';
+
+            // Popula estados
+            const selectEstado = document.getElementById('enderecoEstado');
+            selectEstado.innerHTML = '<option value="">Selecione</option>';
+            estados.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado;
+                option.textContent = estado;
+                selectEstado.appendChild(option);
+            });
+        } else {
+            const label = document.getElementById('labelNovoDado');
+            if (tipoSelecionado === 'senhaINSS') label.textContent = 'Nova Senha INSS:';
+            else if (tipoSelecionado === 'nome') label.textContent = 'Novo Nome:';
+            else if (tipoSelecionado === 'cpf') label.textContent = 'Novo CPF:';
+            else if (tipoSelecionado === 'dataNascimento') label.textContent = 'Nova Data Nascimento:';
+            else if (tipoSelecionado === 'telefone') label.textContent = 'Novo Telefone:';
+
+            const input = document.getElementById('novoValor');
+            input.type = 'text';
+            input.oninput = null;
+            input.placeholder = '';
+
+            if (tipoSelecionado === 'telefone') {
+                input.placeholder = '(00) 00000-0000';
+                input.oninput = () => { input.value = formatarTelefone(input.value); };
+            } else if (tipoSelecionado === 'dataNascimento') {
+                input.type = 'date';
+            } else if (tipoSelecionado === 'cpf') {
+                input.placeholder = '000.000.000-00';
+                input.oninput = () => { input.value = formatarCPF(input.value); };
+            }
+
+            document.getElementById('stepDado').style.display = 'none';
+            document.getElementById('stepAtualizar').style.display = 'block';
         }
     }
 
@@ -480,7 +806,6 @@
     }
 
     function finalizarFluxo() {
-
         const mensagem = document.getElementById('mensagemAtualizacao');
         void mensagem.offsetWidth;
 
@@ -493,19 +818,39 @@
             mensagem.classList.add('sumir');
         }, 4000);
 
-        document.getElementById('stepCPF').style.display = 'block';
+        // Limpa campo CPF
         document.getElementById('icliente').value = '';
-        document.getElementById('stepAtualizar').style.display = 'none';
-        document.getElementById('stepEndereco').style.display = 'none';
-        document.getElementById('stepOperacao').style.display = 'none';
-        document.querySelector('.docEVideosClienteCarteira').style.display = 'none';
-        document.getElementById('stepClienteCarteiraRetornado').style.display = 'none';
-        document.getElementById('tipoAtualizacaoDadoCliente').value='';
-        document.getElementById('novoValor').value=''
+        document.getElementById('novoValor').value = '';
+        document.getElementById('tipoAtualizacaoDadoCliente').value = '';
 
+        // Reseta variáveis
         tipoSelecionado = null;
         parteEndereco = null;
         vaiAtualizarDado = null;
+
+        // Esconde steps 2, 3 e 4
+        document.getElementById('stepC2').style.display = 'none';
+        document.getElementById('stepC3').style.display = 'none';
+        document.getElementById('stepC4').style.display = 'none';
+
+        // Mostra step 1
+        document.getElementById('stepC1').style.display = 'block';
+
+        // Reseta steps visuais
+        stepAtualCarteira = 1;
+        document.querySelectorAll('.carteira-steps .step').forEach((s, i) => {
+            s.classList.remove('active', 'completed');
+            if (i === 0) s.classList.add('active');
+        });
+
+        // Reseta botões
+        atualizarBotoesCarteira();
+
+        // Garante que elementos internos estejam no estado inicial
+        document.getElementById('stepConfirmarAtualizacao').style.display = 'block';
+        document.getElementById('stepDado').style.display = 'none';
+        document.getElementById('stepAtualizar').style.display = 'none';
+        document.getElementById('stepEndereco').style.display = 'none';
     }
 
     const tbody = document.querySelector(".tabelaOp tbody");
