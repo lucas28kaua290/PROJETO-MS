@@ -271,6 +271,23 @@ function preencherDetalhes(cliente) {
   } else {
       tabelaOp.innerHTML = '<tr><td colspan="3" style="text-align:center;">Nenhuma operação registrada</td></tr>';
   }
+
+  // 6. Avatar com iniciais
+  const nomeCompleto = cliente.nome || '';
+  const partes = nomeCompleto.trim().split(' ');
+  const iniciais = partes.length >= 2
+      ? partes[0][0] + partes[partes.length - 1][0]
+      : nomeCompleto.substring(0, 2);
+  const avatarEl = document.getElementById('avatarCliente');
+  if (avatarEl) avatarEl.textContent = iniciais.toUpperCase();
+
+  // 7. Badge convênio
+  const badgeEl = document.getElementById('det_convenio_badge');
+  if (badgeEl) {
+      const conv = cliente.convenio || cliente.tipo_beneficio || '';
+      badgeEl.textContent = conv;
+      badgeEl.style.display = conv ? 'inline-block' : 'none';
+  }
 }
 
   function abrirDetalhesCliente() {
@@ -278,7 +295,11 @@ function preencherDetalhes(cliente) {
     document.querySelector('.telaDetalhesCliente').style.display = 'block';
   }
 
-
+  function voltarParaLista() {
+    document.querySelector('.telaDetalhesCliente').style.display = 'none';
+    document.querySelector('.telaRetornoConsulta').style.display = 'block';
+  }
+  
   function abrefecha(botao, url = null){
     const bloco=botao.parentElement;
     const img=bloco.querySelector('.doc-imagem');
