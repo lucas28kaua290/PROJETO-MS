@@ -160,41 +160,93 @@
                 </div>
             </div>
         </div>
-        <div class="oportunidades-section">
-            <h2 class="titulo-card">🎯 OPORTUNIDADES ATIVAS</h2>
+        <div class="bloco-oportunidades-automacoes">
             
-            <div class="secao-resumo">
-                <div class="resumo-oportunidades">
-                    <div class="resumo-item margem">
-                        <span class="resumo-icon">💰</span>
-                        <span class="resumo-valor" id="resumo-margem">R$ 0,00</span>
-                        <span class="resumo-label">Margem disponível</span>
-                        <span class="resumo-qtd" id="resumo-qtd-margem">0 clientes</span>
+            <div class="oportunidades-section">
+                <h2 class="titulo-card">🎯 OPORTUNIDADES ATIVAS</h2>
+            
+                <div class="secao-resumo">
+                    <div class="resumo-oportunidades">
+                        <div class="resumo-item margem">
+                            <span class="resumo-icon">💰</span>
+                            <span class="resumo-valor" id="resumo-margem">R$ 0,00</span>
+                            <span class="resumo-label">Margem disponível</span>
+                            <span class="resumo-qtd" id="resumo-qtd-margem">0 clientes</span>
+                        </div>
+                        <div class="resumo-item portabilidade">
+                            <span class="resumo-icon">📦</span>
+                            <span class="resumo-valor" id="resumo-portabilidade">0</span>
+                            <span class="resumo-label">Contratos para portabilidade</span>
+                            <span class="resumo-qtd" id="resumo-qtd-port">0 clientes</span>
+                        </div>
+                        <div class="resumo-item cartao">
+                            <span class="resumo-icon">💳</span>
+                            <span class="resumo-valor" id="resumo-cartoes">0</span>
+                            <span class="resumo-label">Cartão BMG - Verificar saque</span>
+                            <span class="resumo-qtd" id="resumo-qtd-cartao">0 clientes</span>
+                        </div>
                     </div>
-                    <div class="resumo-item portabilidade">
-                        <span class="resumo-icon">📦</span>
-                        <span class="resumo-valor" id="resumo-portabilidade">0</span>
-                        <span class="resumo-label">Contratos para portabilidade</span>
-                        <span class="resumo-qtd" id="resumo-qtd-port">0 clientes</span>
+                </div>
+
+                <div class="secao-clientes">
+                    <div class="secao-clientes-header">
+                        <span>👥 Clientes com oportunidade</span>
                     </div>
-                    <div class="resumo-item cartao">
-                        <span class="resumo-icon">💳</span>
-                        <span class="resumo-valor" id="resumo-cartoes">0</span>
-                        <span class="resumo-label">Cartão BMG - Verificar saque</span>
-                        <span class="resumo-qtd" id="resumo-qtd-cartao">0 clientes</span>
+                    <div class="oportunidades-container" id="oportunidadesContainer">
+                        <div class="loading-spinner">Carregando oportunidades...</div>
                     </div>
+                </div>
+
+            </div>
+        
+
+            <div class="automacoes-section">
+                <h2 class="titulo-card">🤖 AUTOMAÇÕES</h2>
+                    
+                <div class="automacao-card" id="card-consulta-rn">
+                    <div class="automacao-icone">🔍</div>
+                    <div class="automacao-info">
+                        <strong>Consultar Margem RN</strong>
+                        <small>Busca margem no RN Consig</small>
+                    </div>
+                    <button class="btn-automacao" id="btn-consulta-rn">Acessar →</button>
+                    
+                    <!-- Área expansível -->
+                    <div class="consulta-expandida" id="consulta-expandida">
+                        <div class="consulta-input-area">
+                            <input type="text" id="cpf-consulta" placeholder="Digite o CPF (apenas números)" maxlength="11">
+                            <button class="btn-buscar" id="btn-buscar-margem">Buscar</button>
+                        </div>
+                        <div class="consulta-resultado" id="consulta-resultado" style="display:none;">
+                            <div class="resultado-header">📋 Dados do Servidor</div>
+                            <div class="resultado-body" id="resultado-body"></div>
+                        </div>
+                        <div class="consulta-loading" id="consulta-loading" style="display:none;">
+                            <div class="spinner"></div>
+                            <span>Consultando...</span>
+                        </div>
+                        <div class="consulta-erro" id="consulta-erro" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <div class="automacao-card">
+                    <div class="automacao-icone">💰</div>
+                    <div class="automacao-info">
+                        <strong>Simular Empréstimo</strong>
+                        <small>Cálculo automático</small>
+                    </div>
+                    <button class="btn-automacao">Simular →</button>
+                </div>
+
+                <div class="automacao-card">
+                    <div class="automacao-icone">📄</div>
+                    <div class="automacao-info">
+                        <strong>Gerar Contrato</strong>
+                        <small>Documento automático</small>
+                    </div>
+                    <button class="btn-automacao">Gerar →</button>
                 </div>
             </div>
-
-            <div class="secao-clientes">
-                <div class="secao-clientes-header">
-                    <span>👥 Clientes com oportunidade</span>
-                </div>
-                <div class="oportunidades-container" id="oportunidadesContainer">
-                    <div class="loading-spinner">Carregando oportunidades...</div>
-                </div>
-            </div>
-
         </div>
     </main>
 

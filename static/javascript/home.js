@@ -597,6 +597,137 @@ async function carregarOportunidades() {
         }
 }
 
+// ========== CONSULTA MARGEM RN ==========
+document.addEventListener('DOMContentLoaded', function() {
+    const btnAcessar = document.getElementById('btn-consulta-rn');
+    const cardConsulta = document.getElementById('card-consulta-rn');
+    const expandida = document.getElementById('consulta-expandida');
+    const inputCpf = document.getElementById('cpf-consulta');
+    const btnBuscar = document.getElementById('btn-buscar-margem');
+    const resultado = document.getElementById('consulta-resultado');
+    const resultadoBody = document.getElementById('resultado-body');
+    const loading = document.getElementById('consulta-loading');
+    const erroDiv = document.getElementById('consulta-erro');
+
+    // Abre/fecha o card expansível
+    btnAcessar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        expandida.classList.toggle('ativo');
+        btnAcessar.textContent = expandida.classList.contains('ativo') ? 'Fechar ↑' : 'Acessar →';
+    });
+
+    // Fecha ao clicar fora (opcional)
+    document.addEventListener('click', function(e) {
+        if (!cardConsulta.contains(e.target)) {
+            expandida.classList.remove('ativo');
+            btnAcessar.textContent = 'Acessar →';
+        }
+    });
+
+    // Buscar margem
+    btnBuscar.addEventListener('click', async function() {
+        const cpf = inputCpf.value.replace(/\D/g, '');
+        
+        if (cpf.length !== 11) {
+            erroDiv.style.display = 'block';
+            erroDiv.textContent = '⚠️ Digite um CPF válido com 11 dígitos.';
+            resultado.style.display = 'none';
+            return;
+        }
+
+        // Mostra loading
+        loading.style.display = 'flex';
+        resultado.style.display = 'none';
+        erroDiv.style.display = 'none';
+        btnBuscar.disabled = true;
+
+        try {
+            const response = await fetch(`https://api.sistemamscred.com.br/consultar/${cpf}`);
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                const d = data.dados;
+
+                // Função pra formatar valor e decidir cor
+                function formataDisponivel(valor) {
+                    // Remove "R$ " e converte pra número
+                    const num = parseFloat(valor.replace(/[^\d,]/g, '').replace(',', '.'));
+                    if (num <= 0) return ''; // Não mostra se for 0
+                    return `<span class="resultado-valor disponivel-verde">${valor}</span>`;
+                }
+
+                function formataBruta(valor) {
+                    return `<span class="resultado-valor bruta-preta">${valor}</span>`;
+                }
+
+                function formataDisponivelZero(valor) {
+                    const num = parseFloat(valor.replace(/[^\d,]/g, '').replace(',', '.'));
+                    if (num > 0) {
+                        return `<span class="resultado-valor disponivel-verde">${valor}</span>`;
+                    } else {
+                        return `<span class="resultado-valor bruta-preta">${valor}</span>`;
+                    }
+                }
+
+                // Monta as linhas das margens
+                const margem35Disp = formataDisponivel(d.margem35_disponivel);
+                const rotativoDisp = formataDisponivel(d.rotativo_disponivel);
+                const cartaoDisp = formataDisponivel(d.cartao_disponivel);
+
+                resultadoBody.innerHTML = `
+                    <div class="resultado-linha"><span class="resultado-label">Nome:</span><span class="resultado-valor">${d.nome}</span></div>
+                    <div class="resultado-linha"><span class="resultado-label">CPF:</span><span class="resultado-valor">${d.cpf}</span></div>
+                    <div class="resultado-linha"><span class="resultado-label">Matrícula:</span><span class="resultado-valor">${d.matricula}</span></div>
+                    <div class="resultado-linha"><span class="resultado-label">Vínculo:</span><span class="resultado-valor">${d.vinculo}</span></div>
+                    <div class="resultado-linha resultado-linha-nascimento">
+                        <span class="resultado-label">Nascimento:</span><span class="resultado-valor">${d.nascimento}</span>
+                        <span class="resultado-label" style="margin-left:auto;">Pensão:</span><span class="resultado-valor">${d.pensao}</span>
+                    </div>
+                    
+                    <!-- Seção Margem 35% -->
+                    <div class="resultado-secao">📊 Margem 35%</div>
+                    <div class="resultado-linha-dupla">
+                        <div class="resultado-item"><span class="resultado-label">Bruta:</span>${formataBruta(d.margem35_bruta)}</div>
+                        <div class="resultado-item"><span class="resultado-label">Disponível:</span>${formataDisponivelZero(d.margem35_disponivel)}</div>
+                    </div>
+                    
+                    <!-- Seção Rotativo -->
+                    <div class="resultado-secao">🔄 Rotativo</div>
+                    <div class="resultado-linha-dupla">
+                        <div class="resultado-item"><span class="resultado-label">Bruta:</span>${formataBruta(d.rotativo_bruta)}</div>
+                        <div class="resultado-item"><span class="resultado-label">Disponível:</span>${formataDisponivelZero(d.rotativo_disponivel)}</div>
+                    </div>
+                    
+                    <!-- Seção Cartão Benefício -->
+                    <div class="resultado-secao">💳 Cartão Benefício</div>
+                    <div class="resultado-linha-dupla">
+                        <div class="resultado-item"><span class="resultado-label">Bruta:</span>${formataBruta(d.cartao_bruta)}</div>
+                        <div class="resultado-item"><span class="resultado-label">Disponível:</span>${formataDisponivelZero(d.cartao_disponivel)}</div>
+                    </div>
+                `;
+
+                resultado.style.display = 'block';
+            } else {
+                erroDiv.style.display = 'block';
+                erroDiv.textContent = `⚠️ ${data.message}`;
+            }
+        } catch (error) {
+            erroDiv.style.display = 'block';
+            erroDiv.textContent = '❌ Erro ao conectar com o servidor. Tente novamente.';
+        } finally {
+            loading.style.display = 'none';
+            btnBuscar.disabled = false;
+        }
+    });
+
+    // Buscar ao pressionar Enter
+    inputCpf.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            btnBuscar.click();
+        }
+    });
+});
+
 function toggleSimulacao(id, btn) {
     const el = document.getElementById(id);
     if (!el) return;
