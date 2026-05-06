@@ -1,5 +1,6 @@
 // --- CONFIGURAÇÕES INICIAIS ---
 const idDono = localStorage.getItem('usuarioId');
+let dadosConsultaAtual = null;
 
 async function inicializarHome() {
     await carregarConfiguracoes(); // Primeiro carrega as metas
@@ -707,6 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
 
                 resultado.style.display = 'block';
+                verificarSimulacao(d);
             } else {
                 erroDiv.style.display = 'block';
                 erroDiv.textContent = `⚠️ ${data.message}`;
@@ -736,12 +738,149 @@ function toggleSimulacao(id, btn) {
     btn.textContent = aberto ? '▼ Ver Simulação' : '▲ Fechar Simulação';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    carregarOportunidades();
-})
+function verificarSimulacao(d) {
+    dadosConsultaAtual = d;
+
+    const areaSimulacao = document.getElementById('area-simulacao-rn')
+    const btnSimular = document.getElementById('btn-simular-margem35')
+    const simResultado = document.getElementById('simulacao-resultado')
+    const simErro = document.getElementById('simulacao-erro')
+
+    simResultado.style.display = 'none'
+    simErro.style.display = 'none'
+
+    const valorBruto = d.margem35_disponivel || '';
+    const num = parseFloat(valorBruto.replace(/[^\d,]/g, '').replace(',', '.'))
+
+    if (num>0) {
+        btnSimular.textContent = `💰 Simular Margem 35% (${valorBruto})`;
+        areaSimulacao.style.display = 'block';
+    } else {
+        areaSimulacao.style.display = 'none';
+    }
+    
+}
 
 // --- EVENTOS DE INTERFACE ---
-document.addEventListener('DOMContentLoaded', inicializarHome);
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarHome();
+
+    const btnSimular   = document.getElementById('btn-simular-margem35');
+    const simLoading   = document.getElementById('simulacao-loading');
+    const simResultado = document.getElementById('simulacao-resultado');
+    const simBody      = document.getElementById('simulacao-body');
+    const simErro      = document.getElementById('simulacao-erro');
+
+    if (!btnSimular) return;
+
+    // Função de simulação reutilizável (usada no botão principal e no resimular)
+    async function executarSimulacao(valorParcela) {
+        const d = dadosConsultaAtual;
+
+        const payload = {
+            cpf:             d.cpf.replace(/\D/g, ''),
+            data_nascimento: d.nascimento,
+            matricula:       d.matricula,
+            valor_parcela:   valorParcela
+        };
+
+        simLoading.style.display   = 'flex';
+        simResultado.style.display = 'none';
+        simErro.style.display      = 'none';
+        btnSimular.disabled        = true;
+
+        try {
+            const response = await fetch('https://api.sistemamscred.com.br/simular/akicapital', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                const r = data.dados;
+
+                // Após r['Valor Cliente'], antes da parcela
+                const valorAntes = data.resultados_antes?.['Valor Cliente'];
+                const valorDepois = data.resultados_depois?.['Valor Cliente'];
+                let blocoIsencao = '';
+
+                if (valorAntes && valorDepois && valorAntes !== valorDepois) {
+                    const antes = parseFloat(valorAntes.replace('.', '').replace(',', '.'));
+                    const depois = parseFloat(valorDepois.replace('.', '').replace(',', '.'));
+                    const diff = (depois - antes).toFixed(2).replace('.', ',');
+                    blocoIsencao = `
+                        <div class="sim-linha" style="background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.3); border-radius:8px; padding:8px 12px; margin: 4px 0;">
+                            <span class="resultado-label">🛡️ Ganho c/ Isenção de Seguro</span>
+                            <span class="resultado-valor" style="color:#1a9e4a; font-weight:bold; font-size:1.3em;">+R$ ${diff}</span>
+                        </div>
+                    `;
+                }
+
+                simBody.innerHTML = `
+                    <div class="sim-linha destaque-green">
+                        <span class="resultado-label">💵 Valor ao Cliente</span>
+                        <span class="resultado-valor sim-valor-destaque">R$ ${r['Valor Cliente']}</span>
+                    </div>
+                    ${blocoIsencao}
+                    <div class="sim-linha destaque-orange">
+                        <span class="resultado-label">💳 Parcela</span>
+                        <input class="sim-input" id="sim-parcela" value="${r['Valor Parcela']}" />
+                    </div>
+                    <div class="sim-linha">
+                        <span class="resultado-label">📋 Valor Bruto</span>
+                        <span class="resultado-valor">R$ ${r['Valor Bruto']}</span>
+                    </div>
+                    <div class="sim-linha">
+                        <span class="resultado-label">📅 Prazo</span>
+                        <span class="resultado-valor">${r['Qtde. Parcela']} meses</span>
+                    </div>
+                    <div class="sim-linha">
+                        <span class="resultado-label">📆 1º Vencimento</span>
+                        <span class="resultado-valor">${r['Data 1\u00ba Vencimento']}</span>
+                    </div>
+                    <div class="sim-linha">
+                        <span class="resultado-label">📈 Taxa a.m.</span>
+                        <span class="resultado-valor">${r['Taxa CL a.m.']}%</span>
+                    </div>
+                    <div class="sim-linha">
+                        <span class="resultado-label">📈 CET a.m.</span>
+                        <span class="resultado-valor">${r['Taxa CET a.m.']}%</span>
+                    </div>
+                    <button class="btn-simular-margem" id="btn-resimular" style="margin-top:10px;">
+                        🔄 Resimular com nova parcela
+                    </button>
+                `;
+
+                simResultado.style.display = 'block';
+
+                // Listener do botão resimular
+                document.getElementById('btn-resimular').addEventListener('click', async function() {
+                    const novaParcela = document.getElementById('sim-parcela').value.trim();
+                    if (!novaParcela) return;
+                    await executarSimulacao(novaParcela);
+                });
+
+            } else {
+                simErro.style.display = 'block';
+                simErro.textContent   = `⚠️ ${data.message || 'Erro ao simular.'}`;
+            }
+        } catch (err) {
+            simErro.style.display = 'block';
+            simErro.textContent   = '❌ Erro ao conectar com o servidor. Tente novamente.';
+        } finally {
+            simLoading.style.display = 'none';
+            btnSimular.disabled      = false;
+        }
+    }
+
+    btnSimular.addEventListener('click', async function() {
+        if (!dadosConsultaAtual) return;
+        const valorParcela = dadosConsultaAtual.margem35_disponivel.replace(/[^\d,]/g, '').trim();
+        await executarSimulacao(valorParcela);
+    });
+});
 
 document.getElementById('toggleMenu').addEventListener('click', () => {
     document.querySelector('.sidebar').classList.toggle('aberto');
