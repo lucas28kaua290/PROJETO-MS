@@ -213,14 +213,39 @@
                     
                     <!-- Área expansível -->
                     <div class="consulta-expandida" id="consulta-expandida">
+
                         <div class="consulta-input-area">
                             <input type="text" id="cpf-consulta" placeholder="Digite o CPF (apenas números)" maxlength="11">
                             <button class="btn-buscar" id="btn-buscar-margem">Buscar</button>
                         </div>
+
                         <div class="consulta-resultado" id="consulta-resultado" style="display:none;">
                             <div class="resultado-header">📋 Dados do Servidor</div>
                             <div class="resultado-body" id="resultado-body"></div>
+
+                            <!-- ✅ NOVO: Botão de simulação — aparece só se tiver margem disponível -->
+                            <div id="area-simulacao-rn" style="display:none; margin-top: 12px;">
+                                <button class="btn-simular-margem" id="btn-simular-margem35">
+                                    💰 Simular Margem 35%
+                                </button>
+                            </div>
+
+                            <!-- ✅ NOVO: Loading da simulação -->
+                            <div class="consulta-loading" id="simulacao-loading" style="display:none;">
+                                <div class="spinner"></div>
+                                <span>Simulando...</span>
+                            </div>
+
+                            <!-- ✅ NOVO: Resultado da simulação -->
+                            <div id="simulacao-resultado" style="display:none; margin-top: 10px;">
+                                <div class="resultado-header">🏦 Resultado da Simulação</div>
+                                <div id="simulacao-body" class="resultado-body"></div>
+                            </div>
+
+                            <!-- ✅ NOVO: Erro da simulação -->
+                            <div class="consulta-erro" id="simulacao-erro" style="display:none;"></div>
                         </div>
+                        
                         <div class="consulta-loading" id="consulta-loading" style="display:none;">
                             <div class="spinner"></div>
                             <span>Consultando...</span>
