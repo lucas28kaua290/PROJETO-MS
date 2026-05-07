@@ -764,7 +764,7 @@ function verificarSimulacao(d) {
 // --- EVENTOS DE INTERFACE ---
 document.addEventListener('DOMContentLoaded', function() {
     inicializarHome();
-
+    carregarOportunidades();
     const btnSimular   = document.getElementById('btn-simular-margem35');
     const simLoading   = document.getElementById('simulacao-loading');
     const simResultado = document.getElementById('simulacao-resultado');
