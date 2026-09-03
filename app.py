@@ -186,26 +186,29 @@ def kpis_clientes():
         return jsonify({"erro": "Erro na conexão"}), 500
     try:
         cursor = conn.cursor(dictionary=True)
+        
         # Total de clientes
         cursor.execute("SELECT COUNT(*) as total FROM clientes")
         total = cursor.fetchone()['total']
-        # Cadastros no mês atual
+        
+        # Cadastros no mês atual (usando a nova coluna data_criacao)
         cursor.execute("""
             SELECT COUNT(*) as total FROM clientes
-            WHERE MONTH(id) = MONTH(CURDATE()) AND YEAR(id) = YEAR(CURDATE())
+            WHERE MONTH(data_criacao) = MONTH(CURDATE()) 
+              AND YEAR(data_criacao) = YEAR(CURDATE())
         """)
-        # id é AUTO_INCREMENT, mas não tem timestamp em clientes; usamos historico_operacoes
+        cadastros_mes = cursor.fetchone()['total']
+        
+        # Operações no mês (usando data_registro da tabela historico_operacoes)
         cursor.execute("""
             SELECT COUNT(*) as total FROM historico_operacoes
             WHERE MONTH(data_registro) = MONTH(CURDATE())
               AND YEAR(data_registro) = YEAR(CURDATE())
         """)
         operacoes_mes = cursor.fetchone()['total']
-        # Novos cadastros: como a tabela clientes não tem data_criacao, contamos via id aproximado
-        # Melhor usar historico para o 2° card como "novos registros de operação"
-        cursor.execute("SELECT COUNT(*) as total FROM clientes")
-        cadastros_mes = cursor.fetchone()['total']  # fallback: total geral
+        
         cursor.close()
+     
         return jsonify({
             "total_clientes": total,
             "cadastros_mes": cadastros_mes,
@@ -215,7 +218,7 @@ def kpis_clientes():
         return jsonify({"erro": str(e)}), 500
     finally:
         conn.close()
-        
+
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
