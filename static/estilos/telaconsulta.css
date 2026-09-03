@@ -194,6 +194,29 @@ div.cliente-info{
     cursor:pointer
 }
 
+.btn-ver-detalhes {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    background-color: #eb6505;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-ver-detalhes:hover {
+    background-color: #c9540a;
+}
+
+.btn-ver-detalhes .material-symbols-outlined {
+    font-size: 14px;
+}
+
 .tabela-clientes tr:nth-child(2n){
     background-color: lightgray;
 }
@@ -223,6 +246,56 @@ div.cliente-info{
 .boxDetalhe {
     border-top: 3px solid #eb6505; /* acrescenta essa linha */
     margin-bottom: 16px;
+}
+
+/* ---- Paginação ---- */
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.paginacao button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 16px;
+    background-color: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.paginacao button:hover:not(:disabled) {
+    background-color: #fff4ec;
+    border-color: #eb6505;
+    color: #eb6505;
+}
+
+.paginacao button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#infoPagina {
+    font-size: 0.88rem;
+    color: #6b7280;
+    min-width: 100px;
+    text-align: center;
+}
+
+.total-registros {
+    font-size: 0.82rem;
+    color: #9ca3af;
+    margin-left: auto;
+    padding-right: 20px;
 }
 
 

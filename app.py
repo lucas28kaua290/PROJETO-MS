@@ -93,6 +93,11 @@ def buscar_clientes():
         'banco_promotora': request.args.get('banco_promotora')
     }
 
+    # Parâmetros de paginação
+    page     = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 15))
+    offset   = (page - 1) * per_page
+
     if filtros['cpf']:
         filtros['cpf'] = ''.join(filter(str.isdigit, filtros['cpf']))
     if filtros['beneficio']:
@@ -104,7 +109,7 @@ def buscar_clientes():
     
     try:
         cursor = conn.cursor(dictionary=True)
-        sql = "SELECT * FROM clientes WHERE 1=1"
+        sql_base = "FROM clientes WHERE 1=1"
         params = []
 
         # Loop inteligente para não repetir "if" para todo mundo
@@ -124,16 +129,22 @@ def buscar_clientes():
         # Aplica filtros LIKE
         for campo in campos_like:
             if filtros[campo]:
-                sql += f" AND {campo} LIKE %s"
+                sql_base += f" AND {campo} LIKE %s"
                 params.append(f"%{filtros[campo]}%")
 
         # Aplica filtros Exatos
         for chave, coluna in campos_exatos.items():
             if filtros[chave]:
-                sql += f" AND {coluna} = %s"
+                sql_base += f" AND {coluna} = %s"
                 params.append(filtros[chave])
 
-        cursor.execute(sql, params)
+        # Conta o total de registros para o frontend calcular páginas
+        cursor.execute(f"SELECT COUNT(*) as total {sql_base}", params)
+        total = cursor.fetchone()['total']
+
+        # Busca a página solicitada, ordenada do mais recente para o mais antigo
+        sql = f"SELECT * {sql_base} ORDER BY id DESC LIMIT %s OFFSET %s"
+        cursor.execute(sql, params + [per_page, offset])
         lista_clientes = cursor.fetchall()
 
         for cliente in lista_clientes:
@@ -158,7 +169,7 @@ def buscar_clientes():
         if not lista_clientes:
             return jsonify({"mensagem": "Nenhum cliente encontrado"}), 404
 
-        return jsonify(lista_clientes), 200
+        return jsonify({"total": total, "clientes": lista_clientes}), 200
     
 
     except Exception as e:

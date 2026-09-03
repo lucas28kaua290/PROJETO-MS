@@ -3,6 +3,12 @@
   const menuToggle = document.getElementById('menuToggle');
   const overlay = document.getElementById('overlay');
   let URL_BASE = "https://sistemamscred.com.br"
+
+  // Controle de paginação
+  let paginaAtual = 1;
+  const porPagina = 15;
+  let totalRegistros = 0;
+  let filtrosAtivos = {}; // guarda os filtros da última busca para reusá-los na paginação
   // Função para formatar CPF
   function formatarCPF(cpf) {
       cpf = cpf.replace(/\D/g, ''); // remove tudo que não é dígito
@@ -45,6 +51,9 @@
           overlay.classList.remove('ativo');
       });
   }
+
+  // Carrega a lista de clientes automaticamente ao abrir a página
+  carregarPagina();
 
   const tipoBusca = window.document.getElementById('tipoBusca')
   const campoSimples = window.document.getElementById('campoSimples')
@@ -131,53 +140,85 @@
     const bairro = document.getElementById('bairro').value;
     const rua = document.getElementById('rua').value;
 
-    let endpoint = `${URL_BASE}/clientes?`
-
-    if (tipoBusca === 'endereco'){
-      endpoint += `estado=${estado}&cidade=${cidade}&bairro=${bairro}&rua=${rua}`
-    } else{
+    // Monta e salva os filtros ativos para reusar na paginação
+    filtrosAtivos = {};
+    if (tipoBusca === 'endereco') {
+      if (estado)  filtrosAtivos.estado  = estado;
+      if (cidade)  filtrosAtivos.cidade  = cidade;
+      if (bairro)  filtrosAtivos.bairro  = bairro;
+      if (rua)     filtrosAtivos.rua     = rua;
+    } else if (tipoBusca) {
       const parametro = tipoBusca === 'nbeneficio' ? 'beneficio' : tipoBusca;
-      endpoint += `${parametro}=${buscaSimples}`;
+      if (buscaSimples) filtrosAtivos[parametro] = buscaSimples;
     }
 
+    // Reinicia na página 1 a cada nova busca
+    paginaAtual = 1;
+    await carregarPagina();
+    document.getElementById('btnLimpar').style.display = "block";
+  }
+
+  async function carregarPagina() {
+    const params = new URLSearchParams({
+      ...filtrosAtivos,
+      page: paginaAtual,
+      per_page: porPagina
+    });
+
     try {
-        const response = await fetch(endpoint);
+        const response = await fetch(`${URL_BASE}/clientes?${params}`);
         const dados = await response.json();
 
         if (!response.ok) {
-            alert(dados.mensagem || "Erro ao buscar cliente");
+            alert(dados.mensagem || "Erro ao buscar clientes");
             return;
         }
 
-        // 2. Limpa a tabela e preenche com os novos dados
-          const tbody = document.getElementById('tabelaClientes');
-          tbody.innerHTML = '';
+        totalRegistros = dados.total;
+        const lista = dados.clientes;
 
-          dados.forEach(cliente => {
-              const tr = document.createElement('tr');
-              tr.className = 'linhaClicavel';
-              // Guardamos o objeto completo no elemento para usar nos detalhes depois
-              tr.dataset.cliente = JSON.stringify(cliente); 
-              
-              tr.innerHTML = `
-                  <td>${cliente.nome}</td>
-                  <td>${formatarCPF(cliente.cpf)}</td>
-                  <td>${cliente.data_nascimento 
-                      ? new Date(cliente.data_nascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) 
-                      : '---'}</td>
-                  <td>${cliente.cidade}/${cliente.estado}</td>
-              `;
-              tbody.appendChild(tr);
-          });
+        // Preenche a tabela
+        const tbody = document.getElementById('tabelaClientes');
+        tbody.innerHTML = '';
 
-          // 3. Mostra a tela de resultados
-          document.querySelector('.telaRetornoConsulta').style.display = 'block';
-          document.getElementById('btnLimpar').style.display = "block";
+        lista.forEach(cliente => {
+            const tr = document.createElement('tr');
+            tr.className = 'linhaClicavel';
+            // Guardamos o objeto completo no elemento para usar nos detalhes depois
+            tr.dataset.cliente = JSON.stringify(cliente); 
+            
+            tr.innerHTML = `
+                <td>${cliente.nome}</td>
+                <td>${formatarCPF(cliente.cpf)}</td>
+                <td>${cliente.data_nascimento 
+                    ? new Date(cliente.data_nascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) 
+                    : '---'}</td>
+                <td>${cliente.cidade}/${cliente.estado}</td>
+                <td><button class="btn-ver-detalhes" onclick="abrirDetalhesDaLinha(this)">
+                    <i class="material-symbols-outlined">open_in_new</i> Ver
+                </button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Atualiza controles de paginação
+        const totalPaginas = Math.ceil(totalRegistros / porPagina);
+        document.getElementById('infoPagina').textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+        document.getElementById('totalRegistros').textContent = `${totalRegistros} cliente(s) encontrado(s)`;
+        document.getElementById('btnAnterior').disabled = paginaAtual <= 1;
+        document.getElementById('btnProximo').disabled  = paginaAtual >= totalPaginas;
 
       } catch (error) {
           console.error("Erro na requisição:", error);
           alert("Erro ao conectar com o servidor.");
       }
+  }
+
+  function mudarPagina(direcao) {
+    paginaAtual += direcao;
+    carregarPagina();
+    // Sobe para o topo da tabela ao trocar de página
+    document.querySelector('.telaRetornoConsulta').scrollIntoView({ behavior: 'smooth' });
   }
 
   const telaDetalhesCliente = document.querySelector('.telaDetalhesCliente')
@@ -187,23 +228,31 @@ function limpar() {
     const form = document.getElementById('formConsulta');
     if (form) form.reset();
 
-    // 2. Esconde as seções de dados
-    telaRetornoConsulta.style.display = "none";
+    // 2. Esconde apenas os detalhes; a lista paginada permanece visível
     telaDetalhesCliente.style.display = "none";
 
-    // 3. Esconde os controles e blocos dinâmicos
+    // 3. Reseta os filtros e recarrega a página 1 sem filtros
+    filtrosAtivos = {};
+    paginaAtual = 1;
+    carregarPagina();
+
+    // 4. Esconde os controles e blocos dinâmicos do formulário
     botaoLimpar.style.display = "none";
     campoSimples.style.display = "none";
     botaoBuscar.style.display = "none";
     blocoEndereco.style.display = "none";
     
-    // 4. Limpa o label de busca (opcional, para garantir)
+    // 5. Limpa o label de busca (opcional, para garantir)
     if (labelBusca) labelBusca.textContent = "";
 }
 
   const tbody=document.getElementById('tabelaClientes');
 
+  // Abre detalhes ao clicar em qualquer célula da linha (exceto no botão Ver, que tem onclick próprio)
   tbody.addEventListener('click', function (e) {
+    // Ignora cliques no botão "Ver" ou no ícone dentro dele (têm handler próprio)
+    if (e.target.closest('.btn-ver-detalhes')) return;
+
     const linha = e.target.closest('tr');
     if (!linha) return;
 
@@ -214,6 +263,14 @@ function limpar() {
     abrirDetalhesCliente();
 
   });
+
+  // Chamada pelo botão "Ver" na célula de ação
+  function abrirDetalhesDaLinha(btn) {
+    const linha = btn.closest('tr');
+    const dadosCliente = JSON.parse(linha.dataset.cliente);
+    preencherDetalhes(dadosCliente);
+    abrirDetalhesCliente();
+  }
 
 function preencherDetalhes(cliente) {
   const tela = document.querySelector('.telaDetalhesCliente');

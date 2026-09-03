@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<head><meta name="google" content="notranslate">
+<head>
+    <meta name="google" content="notranslate">
     <script>
         // BLOQUEIO INSTANTÂNEO - Roda antes de carregar o CSS e o Body
-        (function() {
+        (function () {
             const usuarioId = localStorage.getItem('usuarioId');
-            
+
             // Se o ID não existir, for nulo ou for a string "null"
             if (!usuarioId || usuarioId === "null" || usuarioId === "undefined") {
                 // Não usamos alert aqui para ser mais rápido, redireciona direto
-                window.location.replace("telalogin.html"); 
-                
+                window.location.replace("telalogin.html");
+
             }
         })();
     </script>
@@ -93,10 +94,10 @@
                 <i class="material-symbols-outlined">search</i>
                 <h1>Consulta de cliente</h1>
             </div>
- 
+
             <form action="" id="formConsulta">
                 <div class="busca-row">
- 
+
                     <div class="field-group">
                         <label class="field-label" for="tipoBusca">Tipo de busca</label>
                         <div class="campo-select">
@@ -109,13 +110,13 @@
                             </select>
                         </div>
                     </div>
- 
+
                     <!-- CAMPO SIMPLES -->
                     <div id="campoSimples" class="field-group" style="display: none;">
                         <label id="labelBusca" class="field-label" for="buscaSimples">Pesquisar</label>
                         <input class="field-input" type="text" id="buscaSimples" placeholder="">
                     </div>
- 
+
                     <!-- BOTÕES -->
                     <div class="botoes" id="grupoBotoes">
                         <button type="button" id="btnBuscar" style="display:none;" onclick="buscar()">
@@ -127,9 +128,9 @@
                             Limpar
                         </button>
                     </div>
- 
+
                 </div>
- 
+
                 <!-- BLOCO ENDEREÇO (linha separada) -->
                 <div id="blocoEndereco" style="display:none;">
                     <div class="campo">
@@ -152,15 +153,16 @@
             </form>
         </div>
 
-            <!--CAMPO DADOS RETONADOS-->
-        <div class="telaRetornoConsulta" style="display:none;">
+        <!--CAMPO DADOS RETONADOS-->
+        <div class="telaRetornoConsulta">
             <div class="section-header">
                 <div class="section-header-left">
                     <i class="material-symbols-outlined">group</i>
                     <h2>Resultados</h2>
                 </div>
+                <span id="totalRegistros" class="total-registros"></span>
             </div>
- 
+
             <div id="listaClientes" class="boxLista">
                 <div class="cliente-info">
                     <table class="tabela-clientes">
@@ -170,17 +172,31 @@
                                 <th>CPF</th>
                                 <th>Nascimento</th>
                                 <th class="maior">Endereço</th>
+                                <th>Ação</th>
                             </tr>
                         </thead>
                         <tbody id="tabelaClientes"></tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- PAGINAÇÃO -->
+            <div class="paginacao" id="paginacao">
+                <button id="btnAnterior" onclick="mudarPagina(-1)">
+                    <i class="material-symbols-outlined">chevron_left</i>
+                    Anterior
+                </button>
+                <span id="infoPagina"></span>
+                <button id="btnProximo" onclick="mudarPagina(1)">
+                    Próximo
+                    <i class="material-symbols-outlined">chevron_right</i>
+                </button>
+            </div>
         </div>
 
-            <!-- ===== DETALHES DO CLIENTE ===== -->
+        <!-- ===== DETALHES DO CLIENTE ===== -->
         <div class="telaDetalhesCliente" style="display:none;">
- 
+
             <!-- Botão voltar -->
             <div class="btn-voltar-wrap">
                 <button class="btn-voltar" onclick="voltarParaLista()">
@@ -192,10 +208,10 @@
                     Exportar ficha PDF
                 </button>
             </div>
- 
+
             <!-- Card principal com avatar + nome -->
             <div id="detalheCliente" class="boxDetalhe">
- 
+
                 <div class="cliente-topo">
                     <div class="avatar" id="avatarCliente">--</div>
                     <div class="cliente-topo-info">
@@ -203,9 +219,9 @@
                         <span class="cliente-convenio-badge" id="det_convenio_badge"></span>
                     </div>
                 </div>
- 
+
                 <div class="dados-cliente">
- 
+
                     <!-- DADOS PESSOAIS -->
                     <div class="info-section">
                         <div class="info-section-title">
@@ -225,7 +241,7 @@
                             <span class="info-val" id="det_beneficio"></span>
                         </div>
                     </div>
- 
+
                     <!-- CONTATO -->
                     <div class="info-section">
                         <div class="info-section-title">
@@ -241,7 +257,7 @@
                             <span class="info-val senha-val" id="det_senha"></span>
                         </div>
                     </div>
- 
+
                     <!-- ENDEREÇO -->
                     <div class="info-section info-section-full">
                         <div class="info-section-title">
@@ -267,10 +283,10 @@
                             </div>
                         </div>
                     </div>
- 
+
                 </div>
             </div>
- 
+
             <!-- DOCUMENTOS -->
             <div class="box-documentos">
                 <div class="section-header">
@@ -302,7 +318,7 @@
                     </div>
                 </div>
             </div>
- 
+
             <!-- OPERAÇÕES RECENTES -->
             <div class="box-operacoes" id="OperacaoRecenteCliente">
                 <div class="section-header">
@@ -324,11 +340,11 @@
                     </table>
                 </div>
             </div>
- 
-        </div>    
-    </main> 
 
-     <!-- NOVO: Botão hambúrguer mobile -->
+        </div>
+    </main>
+
+    <!-- NOVO: Botão hambúrguer mobile -->
     <div class="menu-hamburguer" id="menuToggle">
         <span></span>
         <span></span>
@@ -338,7 +354,7 @@
     <!-- NOVO: Overlay escuro -->
     <div class="overlay" id="overlay"></div>
 
-    
+
     <script src="/javascript/consulta.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
@@ -346,4 +362,5 @@
 <footer>
     <div></div>
 </footer>
+
 </html>
