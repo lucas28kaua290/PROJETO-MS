@@ -51,6 +51,9 @@ def main():
     df['sexo'] = None
     df['convenio'] = None
     df['beneficio'] = None
+    df['orgao'] = None
+    df['data_admissao'] = None
+    df['salario'] = None
     df['estado'] = None
     df['cidade'] = None
     df['bairro'] = None
@@ -93,6 +96,9 @@ def main():
             df.at[i, 'sexo'] = dados.get('sexo')
             df.at[i, 'convenio'] = dados.get('convenio')
             df.at[i, 'beneficio'] = dados.get('beneficio')
+            df.at[i, 'orgao'] = dados.get('orgao')
+            df.at[i, 'data_admissao'] = dados.get('data_admissao')
+            df.at[i, 'salario'] = dados.get('salario')
             df.at[i, 'estado'] = dados.get('estado')
             df.at[i, 'cidade'] = dados.get('cidade')
             df.at[i, 'bairro'] = dados.get('bairro')
@@ -105,6 +111,11 @@ def main():
             print(f'       Convênio: {dados.get("convenio")}')
             print(f'       Nascimento: {dados.get("data_nascimento")}')
             print(f'       Telefone: {dados.get("telefone")}')
+            print(f'       Sexo: {dados.get("sexo")}')
+            print(f'       Nome Mãe: {dados.get("nome_mae")}')
+            print(f'       Endereço: {dados.get("rua")}, {dados.get("bairro")}')
+            print(f'       Cidade/UF: {dados.get("cidade")} - {dados.get("estado")}')
+            print(f'       Benefício: {dados.get("beneficio")}')
         else:
             df.at[i, 'status_consulta'] = 'falha'
             df.at[i, 'data_consulta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -120,7 +131,7 @@ def main():
         
         # Pausa entre consultas (evita bloqueio)
         if i < total - 1:
-            espera = random.uniform(3, 8)
+            espera = random.uniform(1, 2)
             print(f'    ⏳ Aguardando {espera:.1f}s...')
             print()
             time.sleep(espera)

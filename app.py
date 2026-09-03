@@ -1106,6 +1106,13 @@ def consulta_fullconsig(cpf):
                     
                     if 'Nome' in texto_label:
                         resultado["nome"] = texto_valor
+                    elif 'CPF' in texto_label and 'Benefício' in texto_label:
+                        # Formato: "545.535.984-34 / 1982620681"
+                        texto_valor_completo = value.get_text(separator=' ', strip=True)
+                        if '/' in texto_valor_completo:
+                            partes = texto_valor_completo.split('/')
+                            if len(partes) > 1:
+                                resultado["beneficio"] = partes[1].strip()
                     elif 'Nascimento' in texto_label:
                         # Formato: "19/11/1960 · 65 Anos"
                         dn = texto_valor.split('·')[0].strip()
