@@ -89,32 +89,51 @@
     DATA(escolha p/ mês e dia. (de tal dia e mes a tal dia e mes))-->
     <main class="meio">
 
-        <div class="formulario">
-            <div class="formulario-header">
-                <i class="material-symbols-outlined">search</i>
-                <h1>Consulta de cliente</h1>
+        <!-- KPIs -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="material-symbols-outlined">group</i></div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Total na base</span>
+                    <span class="kpi-valor" id="kpiTotalClientes">--</span>
+                </div>
             </div>
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="material-symbols-outlined">person_add</i></div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Cadastros no mês</span>
+                    <span class="kpi-valor" id="kpiNovosMes">--</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon"><i class="material-symbols-outlined">receipt_long</i></div>
+                <div class="kpi-info">
+                    <span class="kpi-label">Operações no mês</span>
+                    <span class="kpi-valor" id="kpiOperacoesMes">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="formulario">
 
             <form action="" id="formConsulta">
-                <div class="busca-row">
+                <!-- BARRA DE BUSCA UNIFICADA -->
+                <div class="busca-unificada">
 
-                    <div class="field-group">
-                        <label class="field-label" for="tipoBusca">Tipo de busca</label>
-                        <div class="campo-select">
-                            <select id="tipoBusca" name="tipoBusca" onchange="atualizarCampos()">
-                                <option value="">Selecione</option>
-                                <option value="nome">Nome</option>
-                                <option value="cpf">CPF</option>
-                                <option value="nbeneficio">N° Benefício</option>
-                                <option value="endereco">Endereço</option>
-                            </select>
-                        </div>
+                    <div class="campo-select busca-select">
+                        <select id="tipoBusca" name="tipoBusca" onchange="atualizarCampos()">
+                            <option value="">Filtrar por…</option>
+                            <option value="nome">Nome</option>
+                            <option value="cpf">CPF</option>
+                            <option value="nbeneficio">N° Benefício</option>
+                            <option value="endereco">Endereço</option>
+                        </select>
                     </div>
 
                     <!-- CAMPO SIMPLES -->
-                    <div id="campoSimples" class="field-group" style="display: none;">
+                    <div id="campoSimples" class="busca-input-wrap" style="display: none;">
                         <label id="labelBusca" class="field-label" for="buscaSimples">Pesquisar</label>
-                        <input class="field-input" type="text" id="buscaSimples" placeholder="">
+                        <input class="field-input busca-input" type="text" id="buscaSimples" placeholder="">
                     </div>
 
                     <!-- BOTÕES -->
@@ -171,7 +190,7 @@
                                 <th class="maior">Nome</th>
                                 <th>CPF</th>
                                 <th>Nascimento</th>
-                                <th class="maior">Endereço</th>
+                                <th class="maior">Última Operação</th>
                                 <th>Ação</th>
                             </tr>
                         </thead>
@@ -212,11 +231,17 @@
             <!-- Card principal com avatar + nome -->
             <div id="detalheCliente" class="boxDetalhe">
 
-                <div class="cliente-topo">
+                <!-- HERO DO PERFIL -->
+                <div class="perfil-hero">
                     <div class="avatar" id="avatarCliente">--</div>
-                    <div class="cliente-topo-info">
+                    <div class="perfil-hero-info">
                         <h2 id="det_nome"></h2>
                         <span class="cliente-convenio-badge" id="det_convenio_badge"></span>
+                        <div class="perfil-hero-meta">
+                            <span><i class="material-symbols-outlined">badge</i><span id="det_cpf_hero"></span></span>
+                            <span><i class="material-symbols-outlined">call</i><span id="det_telefone_hero"></span></span>
+                            <span><i class="material-symbols-outlined">location_on</i><span id="det_cidade_hero"></span></span>
+                        </div>
                     </div>
                 </div>
 

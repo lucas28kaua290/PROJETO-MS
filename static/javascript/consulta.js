@@ -54,6 +54,7 @@
 
   // Carrega a lista de clientes automaticamente ao abrir a página
   carregarPagina();
+  carregarKPIs();
 
   const tipoBusca = window.document.getElementById('tipoBusca')
   const campoSimples = window.document.getElementById('campoSimples')
@@ -193,7 +194,9 @@
                 <td>${cliente.data_nascimento 
                     ? new Date(cliente.data_nascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) 
                     : '---'}</td>
-                <td>${cliente.cidade}/${cliente.estado}</td>
+                <td>${cliente.operacoes && cliente.operacoes.length > 0
+                    ? `${cliente.operacoes[0].tipo_operacao || '---'} · ${cliente.operacoes[0].data_operacao || '---'}`
+                    : '---'}</td>
                 <td><button class="btn-ver-detalhes" onclick="abrirDetalhesDaLinha(this)">
                     <i class="material-symbols-outlined">open_in_new</i> Ver
                 </button></td>
@@ -219,6 +222,25 @@
     carregarPagina();
     // Sobe para o topo da tabela ao trocar de página
     document.querySelector('.telaRetornoConsulta').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Carrega os 3 KPIs do topo
+  async function carregarKPIs() {
+    try {
+      const response = await fetch(`${URL_BASE}/clientes/kpis`);
+      if (!response.ok) return;
+      const dados = await response.json();
+
+      const elTotal = document.getElementById('kpiTotalClientes');
+      const elMes   = document.getElementById('kpiNovosMes');
+      const elOp    = document.getElementById('kpiOperacoesMes');
+
+      if (elTotal) elTotal.textContent = dados.total_clientes ?? '--';
+      if (elMes)   elMes.textContent   = dados.cadastros_mes ?? '--';
+      if (elOp)    elOp.textContent    = dados.operacoes_mes ?? '--';
+    } catch (err) {
+      console.warn('KPIs indisponíveis:', err);
+    }
   }
 
   const telaDetalhesCliente = document.querySelector('.telaDetalhesCliente')
@@ -282,6 +304,14 @@ function preencherDetalhes(cliente) {
     ? new Date(cliente.data_nascimento).toLocaleDateString('pt-BR', {timeZone: 'UTC'}) 
     : "---";
   document.getElementById('det_beneficio').textContent = cliente.num_beneficio ? formatarBeneficio(cliente.num_beneficio) : "---";
+
+  // 1b. Hero do perfil (campos rápidos de identidade)
+  const elCpfHero = document.getElementById('det_cpf_hero');
+  const elTelHero = document.getElementById('det_telefone_hero');
+  const elCidHero = document.getElementById('det_cidade_hero');
+  if (elCpfHero) elCpfHero.textContent = cliente.cpf ? formatarCPF(cliente.cpf) : "---";
+  if (elTelHero) elTelHero.textContent = cliente.telefone || "---";
+  if (elCidHero) elCidHero.textContent = cliente.cidade ? `${cliente.cidade}/${cliente.estado}` : "---";
 
   // 2. Endereço
   document.getElementById('det_estado').textContent = cliente.estado || "---";
