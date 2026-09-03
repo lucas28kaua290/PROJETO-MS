@@ -920,10 +920,12 @@ def consulta_fullconsig(cpf):
                     continue
 
             else:
-                # INSS e demais: verifica "Nome:" nos <p>
+                # INSS e demais: verifica "Nome" nos <span class="inss-data-label">
                 soup_temp = BeautifulSoup(html_consulta, "html.parser")
-                ps = [p.get_text(separator=" ", strip=True) for p in soup_temp.find_all("p") if p.get_text(strip=True)]
-                if any("Nome:" in p for p in ps):
+                spans_nome = soup_temp.find_all('span', class_='inss-data-label')
+                tem_nome = any('Nome' in span.get_text(strip=True) for span in spans_nome)
+
+                if tem_nome:
                     print(f"✅ CPF {cpf} encontrado no convênio: {convenio}")
                     convenio_encontrado = convenio
                     soup = soup_temp
@@ -1071,8 +1073,6 @@ def consulta_fullconsig(cpf):
         # =============================================
         # PARSER INSS/SIAPE/GOVERNO/etc (original)
         # =============================================
-        ps = [p.get_text(separator=" ", strip=True) for p in soup.find_all("p") if p.get_text(strip=True)]
-
         resultado = {
             "convenio": convenio_encontrado.upper(),
             "nome": None,
@@ -1094,42 +1094,37 @@ def consulta_fullconsig(cpf):
             "numero": None,
         }
 
-        for p in ps:
-            if "Nome:" in p:
-                resultado["nome"] = p.replace("Nome:", "").strip()
-            elif "Benefício:" in p:
-                partes = p.split("/")
-                if len(partes) > 1:
-                    resultado["beneficio"] = partes[1].replace("Benefício:", "").strip()
-            elif "Data de Nascimento:" in p:
-                dn = p.replace("Data de Nascimento:", "").split("-")[0].strip()
-                try:
-                    resultado["data_nascimento"] = dn
-                except:
-                    pass
-            elif "Endereço:" in p:
-                rua = p.split("Bairro:")[0].replace("Endereço:", "").strip()
-                resultado["rua"] = rua
-                if "Bairro:" in p:
-                    resultado["bairro"] = p.split("Bairro:")[1].split("Cidade:")[0].strip()
-                if "Cidade:" in p:
-                    cidade_estado = p.split("Cidade:")[1].split("CEP:")[0].strip()
-                    if "-" in cidade_estado:
-                        partes_cidade = cidade_estado.split("-")
-                        resultado["cidade"] = partes_cidade[0].replace("Estado:", "").strip()
-                        estado_sigla = partes_cidade[1].replace("Estado:", "").strip()
-                        mapa_estados = {
-                            "AC": "Acre", "AL": "Alagoas", "AP": "Amapá", "AM": "Amazonas",
-                            "BA": "Bahia", "CE": "Ceará", "DF": "Distrito Federal",
-                            "ES": "Espírito Santo", "GO": "Goiás", "MA": "Maranhão",
-                            "MT": "Mato Grosso", "MS": "Mato Grosso do Sul", "MG": "Minas Gerais",
-                            "PA": "Pará", "PB": "Paraíba", "PR": "Paraná", "PE": "Pernambuco",
-                            "PI": "Piauí", "RJ": "Rio de Janeiro", "RN": "Rio Grande do Norte",
-                            "RS": "Rio Grande do Sul", "RO": "Rondônia", "RR": "Roraima",
-                            "SC": "Santa Catarina", "SP": "São Paulo", "SE": "Sergipe",
-                            "TO": "Tocantins"
-                        }
-                        resultado["estado"] = mapa_estados.get(estado_sigla, estado_sigla)
+        # NOVO PARSER: pega os dados das spans inss-data-label
+        try:
+            for div in soup.find_all('div', class_='inss-data-row'):
+                label = div.find('span', class_='inss-data-label')
+                value = div.find('span', class_='inss-data-value')
+                
+                if label and value:
+                    texto_label = label.get_text(strip=True)
+                    texto_valor = value.get_text(strip=True)
+                    
+                    if 'Nome' in texto_label:
+                        resultado["nome"] = texto_valor
+                    elif 'Nascimento' in texto_label:
+                        # Formato: "19/11/1960 · 65 Anos"
+                        dn = texto_valor.split('·')[0].strip()
+                        resultado["data_nascimento"] = dn
+                    elif 'Endereço' in texto_label:
+                        # Formato: "RUA, BAIRRO, CIDADE - ESTADO CEP"
+                        # Usa get_text com separador pra pegar as quebras de linha
+                        endereco_completo = value.get_text(separator='\n', strip=True)
+                        linhas = endereco_completo.split('\n')
+                        if len(linhas) > 0:
+                            resultado["rua"] = linhas[0].strip()
+                        if len(linhas) > 1:
+                            cidade_estado = linhas[1].strip()
+                            if '-' in cidade_estado:
+                                cidade, estado = cidade_estado.split('-', 1)
+                                resultado["cidade"] = cidade.strip()
+                                resultado["estado"] = estado.strip()
+        except Exception as e:
+            print(f"⚠️ Erro ao parsear dados INSS: {e}")
 
         # Telefone
         telefones = []
