@@ -797,7 +797,7 @@ div.cliente-info::-webkit-scrollbar-thumb {
 }
 
 .busca-unificada .botoes {
-    padding: 0 8px;
+    padding: 0px;
     border-left: 1px solid #e5e7eb;
     display: flex;
     align-items: center;
@@ -832,7 +832,7 @@ div.cliente-info::-webkit-scrollbar-thumb {
 
 /* Section header genérico */
 .section-header {
-    background: linear-gradient(90deg, #111111 0%, #1a1a1a 100%);
+    background: #f4f2f2;
     border-left: 4px solid #eb6505;
     border-bottom: none;
     padding: 12px 20px;
