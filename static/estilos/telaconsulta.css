@@ -17,28 +17,58 @@
 
 .kpi-card {
     background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 18px 20px;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 20px 22px;
     display: flex;
     align-items: center;
     gap: 16px;
-    border-top: 3px solid #eb6505;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    animation: kpiSlideUp 0.5s ease both;
+}
+
+.kpi-card:nth-child(1) { animation-delay: 0.05s; }
+.kpi-card:nth-child(2) { animation-delay: 0.12s; }
+.kpi-card:nth-child(3) { animation-delay: 0.19s; }
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #eb6505 0%, #ff9a45 100%);
+    border-radius: 4px 0 0 4px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(235, 101, 5, 0.13);
+}
+
+@keyframes kpiSlideUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0);     }
 }
 
 .kpi-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background-color: #fff0e6;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fff0e6 0%, #ffe0c8 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(235,101,5,0.15);
 }
 
 .kpi-icon i {
-    font-size: 22px;
+    font-size: 24px;
     color: #eb6505;
 }
 
@@ -49,18 +79,19 @@
 }
 
 .kpi-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #9ca3af;
+    font-size: 0.70rem;
+    font-weight: 700;
+    color: #b0b8c9;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
 }
 
 .kpi-valor {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1a1a1a;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111111;
     line-height: 1;
+    letter-spacing: -0.5px;
 }
 
 /* ========== FORMULÁRIO ========== */
@@ -68,10 +99,12 @@
     margin-top: 0;
     margin-right: 24px;
     background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 16px 20px;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     transition: margin-left 0.3s ease;
+    animation: kpiSlideUp 0.45s ease both;
 }
 
 .formulario>h1 {
@@ -100,21 +133,23 @@
 .campo-select select {
     appearance: none;
     -webkit-appearance: none;
-    background-color: #f9fafb;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 9px 36px 9px 12px;
-    font-size: 0.9rem;
-    color: #1a1a1a;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 11px 38px 11px 16px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #111111;
     cursor: pointer;
     min-width: 180px;
-    transition: border-color 0.2s ease;
+    transition: color 0.2s ease;
+    letter-spacing: 0.2px;
 }
 
 .campo-select select:focus {
     outline: none;
-    border-color: #eb6505;
-    box-shadow: 0 0 0 3px rgba(235, 101, 5, 0.12);
+    box-shadow: none;
+    color: #eb6505;
 }
 
 /* setinha */
@@ -165,38 +200,46 @@
 #btnBuscar {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 9px 20px;
-    background-color: #eb6505;
+    gap: 7px;
+    padding: 0 22px;
+    background: linear-gradient(135deg, #eb6505 0%, #d45800 100%);
     color: #ffffff;
     border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    border-radius: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    letter-spacing: 0.3px;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
+    height: 100%;
+    min-height: 44px;
 }
-#btnBuscar:hover { background-color: #c9540a; }
+#btnBuscar:hover {
+    background: linear-gradient(135deg, #d45800 0%, #b84d00 100%);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+}
 #btnBuscar:active { transform: scale(0.97); }
 
 #btnLimpar {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 9px 16px;
-    background-color: #ffffff;
-    color: #6b7280;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 0 14px;
+    background-color: transparent;
+    color: #9ca3af;
+    border: none;
+    border-radius: 0;
+    font-size: 0.88rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease;
+    height: 100%;
+    min-height: 44px;
 }
-#btnLimpar:hover { background-color: #f9fafb; color: #374151; }
+#btnLimpar:hover { background-color: #fff4ec; color: #eb6505; }
 
 #btnBuscar:active,
-#btnLimpar:active{
+#btnLimpar:active {
     transform: scale(0.98);
 }
 
@@ -204,23 +247,40 @@
     margin-top: 20px;
     margin-right: 24px;
     background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
     transition: margin-left 0.3s ease;
+    animation: kpiSlideUp 0.5s ease 0.2s both;
 }
 
 .sidebar.aberto~.telaRetornoConsulta {
     margin-left: 253px;
 }
 
-div.cliente-info{
-    overflow-Y:auto;
+div.cliente-info {
+    overflow-y: auto;
     max-height: 420px;
-    overflow-Y:auto;
     border: none;
-    margin:0;
-    padding:0px;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #eb6505 #f5f5f5;
+}
+
+div.cliente-info::-webkit-scrollbar {
+    width: 5px;
+}
+
+div.cliente-info::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+div.cliente-info::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #eb6505, #ff9a45);
+    border-radius: 10px;
 }
 .tabela-clientes{
     position:relative;
@@ -230,8 +290,9 @@ div.cliente-info{
 }
 
 #tabelaClientes tr.linhaClicavel:hover td {
-    background-color: #fafafa;
-    transition: background-color 0.15s ease;
+    background-color: #fff6f0;
+    color: #111;
+    transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .tabela-clientes tr,
@@ -249,20 +310,24 @@ div.cliente-info{
 .btn-ver-detalhes {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 5px 10px;
-    background-color: #eb6505;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    gap: 5px;
+    padding: 6px 13px;
+    background-color: transparent;
+    color: #eb6505;
+    border: 1.5px solid #eb6505;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    letter-spacing: 0.2px;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-ver-detalhes:hover {
-    background-color: #c9540a;
+    background-color: #eb6505;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(235,101,5,0.30);
+    transform: translateY(-1px);
 }
 
 .btn-ver-detalhes .material-symbols-outlined {
@@ -284,15 +349,20 @@ div.cliente-info{
 .tabela-clientes thead th {
     position: sticky;
     top: 0;
-    background-color: #f9fafb;
+    background: linear-gradient(180deg, #111111 0%, #1a1a1a 100%);
     color: #eb6505;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
-    padding: 10px 16px;
+    letter-spacing: 0.8px;
+    padding: 13px 18px;
     text-align: left;
-    border-bottom: 2px solid #eb6505;
+    border-bottom: none;
+    z-index: 2;
+}
+
+.tabela-clientes thead th:first-child {
+    border-radius: 0;
 }
 
 .boxDetalhe {
@@ -364,57 +434,69 @@ div.cliente-info{
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding: 14px 20px;
-    border-top: 1px solid #e5e7eb;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #f5f5f5;
+    background: #fafafa;
 }
 
 .paginacao button {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 7px 16px;
+    gap: 5px;
+    padding: 8px 18px;
     background-color: #ffffff;
-    color: #374151;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    font-weight: 500;
+    color: #333333;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    letter-spacing: 0.2px;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .paginacao button:hover:not(:disabled) {
-    background-color: #fff4ec;
+    background-color: #eb6505;
     border-color: #eb6505;
-    color: #eb6505;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(235,101,5,0.25);
 }
 
 .paginacao button:disabled {
-    opacity: 0.4;
+    opacity: 0.35;
     cursor: not-allowed;
 }
 
 #infoPagina {
-    font-size: 0.88rem;
-    color: #6b7280;
-    min-width: 100px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #111111;
+    min-width: 110px;
     text-align: center;
+    background: #ffffff;
+    border: 1.5px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 6px 12px;
 }
 
 .total-registros {
-    font-size: 0.82rem;
-    color: #9ca3af;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ff9a45;
     margin-left: auto;
     padding-right: 20px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
 }
 
 
 .tabela-clientes tbody td {
-    padding: 11px 16px;
-    color: #374151;
-    border-bottom: 1px solid #f3f4f6;
-    border: none;
+    padding: 13px 18px;
+    color: #333333;
+    font-size: 0.88rem;
+    border-bottom: 1px solid #f5f5f5;
 }
 
 .tabela-clientes th.maior{
@@ -494,40 +576,44 @@ div.cliente-info{
     align-items: center;
     gap: 8px;
     width: 100%;
-    padding: 12px 16px;
-    border-left: 3px solid #eb6505;
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    padding: 13px 16px;
+    border-left: 4px solid #eb6505;
+    background: linear-gradient(90deg, #fff6f0 0%, #ffffff 60%);
+    border: 1.5px solid #f0f0f0;
+    border-left: 4px solid #eb6505;
+    border-radius: 10px;
     font-size: 0.88rem;
-    font-weight: 600;
-    color: #374151;
+    font-weight: 700;
+    color: #333333;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
 }
+
 
 .telaDetalhesCliente {
     margin-right: 24px;
 }
 
 .botao-rg:hover {
-    background-color: #f9fafb;
+    background: linear-gradient(90deg, #fff0e6 0%, #fff8f3 100%);
     border-color: #eb6505;
     color: #eb6505;
+    box-shadow: 0 4px 16px rgba(235,101,5,0.12);
 }
+
 .seta-doc { margin-left: auto; font-size: 20px; transition: transform 0.2s ease; }
 .doc-bloco.ativo .seta-doc { transform: rotate(180deg); }
 
 .doc-conteudo {
-    margin-top: 0px;
+    margin-top: 0;
     max-height: 0;
-    overflow:hidden;
-    padding:0 12px;
+    overflow: hidden;
+    padding: 0 12px;
     transition:
         max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
         padding 0.3s ease;
-    background-color: lightgray;
-    border-radius: 0px 0px 8px 8px;
+    background-color: #f5f5f5;
+    border-radius: 0 0 10px 10px;
 }
 
 .doc-imagem-frente,
@@ -569,15 +655,14 @@ div.cliente-info{
 }
 
 .tabela-operacoesCliente table th {
-    background-color: #f9fafb;
+    background: linear-gradient(180deg, #111111 0%, #1a1a1a 100%);
     color: #eb6505;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
-    padding: 10px 16px;
+    letter-spacing: 0.8px;
+    padding: 13px 18px;
     border: none;
-    border-bottom: 1px solid #e5e7eb;
 }
 
 .tabela-operacoesCliente table td {
@@ -587,17 +672,32 @@ div.cliente-info{
     color: #374151;
 }
 
-.tabela-operacoesCliente tr:nth-child(2n){
-    background-color: lightgray;
+.tabela-operacoesCliente tr:nth-child(2n) {
+    background-color: #fafafa;
 }
 
-.tabela-operacoesCliente{
-    overflow-Y:auto;
+.tabela-operacoesCliente {
+    overflow-y: auto;
     max-height: 320px;
-    overflow-Y:auto;
     border: none;
     margin: 0;
-    padding:0px;
+    padding: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #eb6505 #f5f5f5;
+}
+
+.tabela-operacoesCliente::-webkit-scrollbar {
+    width: 5px;
+}
+
+.tabela-operacoesCliente::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.tabela-operacoesCliente::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #eb6505, #ff9a45);
+    border-radius: 10px;
 }
 
 /* Header do formulário */
@@ -629,25 +729,28 @@ div.cliente-info{
 /* Barra de busca unificada */
 .busca-unificada {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 0;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 12px;
     overflow: hidden;
-    background: #f9fafb;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: #fafafa;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .busca-unificada:focus-within {
     border-color: #eb6505;
-    box-shadow: 0 0 0 3px rgba(235, 101, 5, 0.12);
+    box-shadow: 0 0 0 4px rgba(235, 101, 5, 0.10), 0 4px 20px rgba(235,101,5,0.08);
     background: #ffffff;
 }
 
 .busca-unificada .campo-select.busca-select {
     max-width: none;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1.5px solid #f0f0f0;
     background: transparent;
+    display: flex;
+    align-items: center;
 }
 
 .busca-unificada .campo-select.busca-select::after {
@@ -729,22 +832,28 @@ div.cliente-info{
 
 /* Section header genérico */
 .section-header {
-    background-color: #f9fafb;
+    background: linear-gradient(90deg, #111111 0%, #1a1a1a 100%);
     border-left: 4px solid #eb6505;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: none;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.section-header-left i {
+    color: #eb6505;
 }
 
 .section-header-left { display: flex; align-items: center; gap: 8px; }
-.section-header-left i { color: #eb6505; }
 
 .section-header h2 {
-    font-size: 0.88rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 800;
     color: #eb6505;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
-
 /* Botão voltar */
 .btn-voltar-wrap {
     display: flex;
@@ -754,22 +863,30 @@ div.cliente-info{
 }
 
 .btn-voltar {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 14px;
-    background: none;
-    border: none;
-    color: #eb6505;
-    font-size: 0.88rem;
-    font-weight: 600;
+    background: #ffffff;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 10px;
+    color: #333333;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    padding: 4px 0;
-    transition: opacity 0.2s ease;
+    padding: 8px 16px;
+    transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .btn-voltar i { font-size: 18px; }
-.btn-voltar:hover { opacity: 0.75; }
+
+.btn-voltar:hover {
+    border-color: #eb6505;
+    color: #eb6505;
+    box-shadow: 0 4px 14px rgba(235,101,5,0.15);
+    transform: translateX(-2px);
+}
 
 .btn-pdf {
     display: inline-flex;
