@@ -310,7 +310,15 @@ function preencherDetalhes(cliente) {
   const elTelHero = document.getElementById('det_telefone_hero');
   const elCidHero = document.getElementById('det_cidade_hero');
   if (elCpfHero) elCpfHero.textContent = cliente.cpf ? formatarCPF(cliente.cpf) : "---";
-  if (elTelHero) elTelHero.textContent = cliente.telefone || "---";
+  if (elTelHero) {
+    const telHeroLimpo = (cliente.telefone || '').replace(/\D/g, '');
+    if (telHeroLimpo) {
+      elTelHero.innerHTML = `<a href="https://wa.me/55${telHeroLimpo}" target="_blank" class="btn-whatsapp">
+        <i class="material-symbols-outlined">call</i>${cliente.telefone}</a>`;
+    } else {
+      elTelHero.textContent = "---";
+    }
+  }
   if (elCidHero) elCidHero.textContent = cliente.cidade ? `${cliente.cidade}/${cliente.estado}` : "---";
 
   // 2. Endereço
@@ -320,7 +328,14 @@ function preencherDetalhes(cliente) {
   document.getElementById('det_rua').textContent = cliente.rua || "---";
 
   // 3. Contato e Segurança
-  document.getElementById('det_telefone').textContent = cliente.telefone || "---";
+  const telLimpo = (cliente.telefone || '').replace(/\D/g, '');
+  if (telLimpo) {
+    document.getElementById('det_telefone').innerHTML =
+      `<a href="https://wa.me/55${telLimpo}" target="_blank" class="btn-whatsapp">
+        <i class="material-symbols-outlined">chat</i>${cliente.telefone}</a>`;
+  } else {
+    document.getElementById('det_telefone').textContent = "---";
+  }
   document.getElementById('det_senha').textContent = cliente.senha_inss || "---";
 
   // 4. Tabela de documentos

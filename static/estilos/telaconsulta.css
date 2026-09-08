@@ -1017,6 +1017,29 @@ footer>div{
     height: 20px;
 }
 
+/* ===== BOTÃO WHATSAPP ===== */
+.btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #25D366;
+    color: #fff;
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe59;
+    transform: scale(1.03);
+}
+
+.btn-whatsapp .material-symbols-outlined {
+    font-size: 1rem;
+}
 
 /* ========== MEDIA QUERIES - RESPONSIVIDADE ========== */
 
