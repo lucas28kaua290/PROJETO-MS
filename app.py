@@ -862,7 +862,7 @@ def get_sessao_fullconsig():
         print(f"⚠️  Sessão ativa detectada — confirmando com token: {token_sessao[:10]}...")
         resp_confirmacao = _sessao_fullconsig.post(
             "https://sistema.fullconsig.com.br/login/login",
-            data={**credenciais, "confirmacao": token_sessao}
+            data={**credenciais, "confirmar_sessao": token_sessao}
         )
         print(f"Login confirmado - status: {resp_confirmacao.status_code} - response: {resp_confirmacao.text[:200]}")
     else:
