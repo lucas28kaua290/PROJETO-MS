@@ -1373,6 +1373,38 @@ def debug_fullconsig(cpf):
     
     return jsonify(resultado_debug), 200
 
+@app.route('/debug-login', methods=['GET'])
+def debug_login():
+    import os
+    sessao = req_http.Session()
+    sessao.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+        "X-Requested-With": "XMLHttpRequest",
+        "Referer": "https://sistema.fullconsig.com.br/consulta/consulta"
+    })
+    
+    credenciais = {
+        "login": os.getenv('FULLCONSIG_LOGIN'),
+        "senha": os.getenv('FULLCONSIG_SENHA')
+    }
+    
+    resp = sessao.post(
+        "https://sistema.fullconsig.com.br/login/login",
+        data=credenciais
+    )
+    
+    # Testa se sessão ficou válida
+    resp_home = sessao.get("https://sistema.fullconsig.com.br/home/home")
+    
+    return jsonify({
+        "login_enviado": credenciais['login'],  # só pra confirmar que a env var existe
+        "senha_existe": bool(credenciais['senha']),
+        "login_status": resp.status_code,
+        "login_response": resp.json() if resp.headers.get('content-type','').startswith('application/json') else resp.text[:500],
+        "home_status": resp_home.status_code,
+        "home_response": resp_home.text[:300]
+    }), 200
+
 # =============================================
 # COMANDO PARA PROCESSAR OPORTUNIDADES (ROBÔ)
 # =============================================
