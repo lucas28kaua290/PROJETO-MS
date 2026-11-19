@@ -852,27 +852,22 @@ def get_sessao_fullconsig():
         data=credenciais
     )
 
-    # Verifica se tem sessão ativa — extrai o token confirmar_sessao do response
-    token_sessao = None
     try:
         dados_login = resp_login.json()
-        token_sessao = dados_login.get('confirmar_sessao')
+        # ✅ campo correto é "confirmacao", não "confirmar_sessao"
+        token_sessao = dados_login.get('confirmacao')
     except:
-        # Se não for JSON, tenta regex no HTML
-        import re
-        match = re.search(r'confirmar_sessao["\s:]+([a-f0-9]{40,})', resp_login.text)
-        if match:
-            token_sessao = match.group(1)
+        token_sessao = None
 
     if token_sessao:
         print(f"⚠️  Sessão ativa detectada — confirmando com token: {token_sessao[:10]}...")
-        resp_login = _sessao_fullconsig.post(
+        resp_confirmacao = _sessao_fullconsig.post(
             "https://sistema.fullconsig.com.br/login/login",
-            data={**credenciais, "confirmar_sessao": token_sessao}
+            data={**credenciais, "confirmacao": token_sessao}
         )
-        print(f"Login confirmado - status: {resp_login.status_code}")
+        print(f"Login confirmado - status: {resp_confirmacao.status_code} - response: {resp_confirmacao.text[:200]}")
     else:
-        print(f"Login FullConsig - status: {resp_login.status_code} - OK: {'loginForm' not in resp_login.text}")
+        print(f"Login FullConsig - status: {resp_login.status_code} - response: {resp_login.text[:200]}")
 
     return _sessao_fullconsig
 
