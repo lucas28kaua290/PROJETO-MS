@@ -854,7 +854,6 @@ def get_sessao_fullconsig():
 
     try:
         dados_login = resp_login.json()
-        # ✅ campo correto é "confirmacao", não "confirmar_sessao"
         token_sessao = dados_login.get('confirmacao')
     except:
         token_sessao = None
@@ -897,7 +896,7 @@ def consulta_fullconsig(cpf):
 
         # Verifica se a sessão ainda é válida
         resp_check = sessao.get("https://sistema.fullconsig.com.br/home/home")
-        if 'loginForm' in resp_check.text or (resp_check.url and 'login' in resp_check.url):
+        if resp_check.status_code == 401 or 'loginForm' in resp_check.text or (resp_check.url and 'login' in resp_check.url):
             print("⚠️  Sessão expirada — refazendo login...")
             sessao = get_sessao_fullconsig()
 
