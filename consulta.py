@@ -9,7 +9,8 @@ from datetime import datetime
 # CONFIGURAÇÕES
 # ============================================================
 BASE_URL      = 'https://sistemamscred.com.br'
-ARQUIVO_CSV   = 'clientes_enriquecidos_20260903_193941.csv'
+ARQUIVO_EXCEL = 'clientes.xlsx'   # nome da sua planilha de entrada
+ARQUIVO_SAIDA = f'clientes_enriquecidos_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
 PAUSA_MIN     = 0.2
 PAUSA_MAX     = 0.5
 SALVAR_A_CADA = 20
@@ -181,11 +182,47 @@ def main():
     print('🚀 IMPORTAÇÃO DE CLIENTES — MSCred')
     print('=' * 60)
 
-    print(f'📂 Lendo: {ARQUIVO_CSV}')
-    df = pd.read_csv(ARQUIVO_CSV, sep=';', encoding='utf-8')
+    print(f'📂 Lendo: {ARQUIVO_EXCEL}')
+    df_entrada = pd.read_excel(ARQUIVO_EXCEL)
 
-    df_validos = df[df['status_consulta'] == 'sucesso'].copy()
-    print(f'✅ {len(df_validos)} clientes válidos (status = sucesso)')
+    # Pega a primeira coluna, seja qual for o nome dela
+    cpfs = df_entrada.iloc[:, 0].dropna().astype(str).str.strip()
+    # Limpa antes de filtrar
+    cpfs = df_entrada.iloc[:, 0].dropna().astype(str).str.strip()
+    cpfs = cpfs.str.replace(r'[.\-\s]', '', regex=True)
+    cpfs = cpfs.str.replace(r'\.0$', '', regex=True)
+    cpfs = cpfs.str.zfill(11)
+    cpfs = cpfs[cpfs.str.match(r'^\d{11}$')]
+    print(f'✅ {len(cpfs)} CPFs encontrados na planilha')
+    print()
+
+    # Consulta a FullConsig para cada CPF
+    registros = []
+    for i, cpf in enumerate(cpfs, start=1):
+        print(f'[{i}/{len(cpfs)}] Consultando CPF: {cpf}')
+        try:
+            resp = requests.get(f'{BASE_URL}/consulta-fullconsig/{cpf}', timeout=20)
+            if resp.status_code == 200:
+                dados = resp.json()
+                dados['status_consulta'] = 'sucesso'
+                dados['CPF'] = cpf
+                registros.append(dados)
+                print(f'    ✅ {dados.get("nome", "sem nome")} — {dados.get("convenio")}')
+            else:
+                registros.append({'CPF': cpf, 'status_consulta': 'nao_encontrado'})
+                print(f'    ❌ Não encontrado')
+        except Exception as e:
+            registros.append({'CPF': cpf, 'status_consulta': 'erro', 'erro': str(e)})
+            print(f'    ⚠️  Erro: {e}')
+        time.sleep(random.uniform(PAUSA_MIN, PAUSA_MAX))
+
+    df_validos = pd.DataFrame(registros)
+    df_validos.to_csv(ARQUIVO_SAIDA, index=False, encoding='utf-8', sep=';')
+    print(f'\n💾 CSV enriquecido salvo: {ARQUIVO_SAIDA}')
+    print()
+
+    df_validos = df_validos[df_validos['status_consulta'] == 'sucesso'].copy()
+    print(f'📊 {len(df_validos)} clientes válidos para importar')
     print()
 
     df_validos['status_importacao']  = 'pendente'
@@ -211,6 +248,19 @@ def main():
         print(f'[{i}/{total}] {nome} — CPF: {cpf}')
         print(f'    📍 Rua   : {rua_debug}')
         print(f'    📍 Bairro: {bairro_debug}')
+
+        # Checa se CPF já existe no sistema antes de cadastrar
+        cpf_checar = limpar_cpf(row['CPF'])
+        try:
+            resp_check = requests.get(f'{BASE_URL}/clientes?cpf={cpf_checar}', timeout=10)
+            if resp_check.status_code == 200:
+                df_validos.at[idx, 'status_importacao']  = 'duplicado'
+                df_validos.at[idx, 'detalhe_importacao'] = 'CPF já existe no sistema'
+                duplicados += 1
+                print(f'    ⚠️  CPF já existe no sistema — pulando')
+                continue
+        except Exception as e:
+            print(f'    ⚠️  Erro ao checar duplicata: {e} — tentando cadastrar mesmo assim')
 
         ok, detalhe = cadastrar_cliente(row)
 

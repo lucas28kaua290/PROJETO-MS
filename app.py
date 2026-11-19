@@ -842,11 +842,38 @@ def get_sessao_fullconsig():
         "X-Requested-With": "XMLHttpRequest",
         "Referer": "https://sistema.fullconsig.com.br/consulta/consulta"
     })
+    credenciais = {
+        "login": os.getenv('FULLCONSIG_LOGIN'),
+        "senha": os.getenv('FULLCONSIG_SENHA')
+    }
+
     resp_login = _sessao_fullconsig.post(
         "https://sistema.fullconsig.com.br/login/login",
-        data={"login": os.getenv('FULLCONSIG_LOGIN'), "senha": os.getenv('FULLCONSIG_SENHA')}
+        data=credenciais
     )
-    print(f"Login FullConsig - status: {resp_login.status_code} - OK: {'loginForm' not in resp_login.text}")
+
+    # Verifica se tem sessão ativa — extrai o token confirmar_sessao do response
+    token_sessao = None
+    try:
+        dados_login = resp_login.json()
+        token_sessao = dados_login.get('confirmar_sessao')
+    except:
+        # Se não for JSON, tenta regex no HTML
+        import re
+        match = re.search(r'confirmar_sessao["\s:]+([a-f0-9]{40,})', resp_login.text)
+        if match:
+            token_sessao = match.group(1)
+
+    if token_sessao:
+        print(f"⚠️  Sessão ativa detectada — confirmando com token: {token_sessao[:10]}...")
+        resp_login = _sessao_fullconsig.post(
+            "https://sistema.fullconsig.com.br/login/login",
+            data={**credenciais, "confirmar_sessao": token_sessao}
+        )
+        print(f"Login confirmado - status: {resp_login.status_code}")
+    else:
+        print(f"Login FullConsig - status: {resp_login.status_code} - OK: {'loginForm' not in resp_login.text}")
+
     return _sessao_fullconsig
 
 @app.route('/consulta-fullconsig/<cpf>', methods=['GET'])
@@ -867,7 +894,18 @@ def consulta_fullconsig(cpf):
             except:
                 return 0.0
             
-        sessao = get_sessao_fullconsig()
+        # Reutiliza sessão existente, só loga se não tiver nenhuma
+        if _sessao_fullconsig is None:
+            sessao = get_sessao_fullconsig()
+        else:
+            sessao = _sessao_fullconsig
+
+        # Verifica se a sessão ainda é válida
+        resp_check = sessao.get("https://sistema.fullconsig.com.br/home/home")
+        if 'loginForm' in resp_check.text or (resp_check.url and 'login' in resp_check.url):
+            print("⚠️  Sessão expirada — refazendo login...")
+            sessao = get_sessao_fullconsig()
+
         convenios = ['inss', 'siape', 'governo', 'clt', 'prefeitura', 'forcasArmadas', 'veiculos', 'bolsa']
 
         soup = None
