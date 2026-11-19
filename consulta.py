@@ -123,15 +123,24 @@ def cadastrar_cliente(row):
     """POST /clientes. Retorna (sucesso: bool, detalhe: str)."""
     rua_final, bairro_final = separar_rua_bairro(row.get('rua'))
 
+    def _vazio(v):
+        """Retorna True para None, NaN ou string vazia."""
+        if v is None:
+            return True
+        try:
+            return pd.isna(v)
+        except Exception:
+            return False
+
     payload = {
-        'nome':      str(row['NOME_CLIENTE']).strip(),
-        'cpf':       limpar_cpf(row['CPF']),
+        'nome':      str(row.get('nome') or '').strip(),
+        'cpf':       limpar_cpf(row['cpf']),
         'beneficio': limpar_beneficio(row.get('beneficio')),
         'dataNasc':  formatar_data(row.get('data_nascimento')),
         'telefone':  limpar_telefone(row.get('telefone')),
         'senha':     None,
-        'estado':    None if pd.isna(row.get('estado')) else str(row['estado']).strip(),
-        'cidade':    None if pd.isna(row.get('cidade')) else str(row['cidade']).strip(),
+        'estado':    None if _vazio(row.get('estado')) else str(row.get('estado')).strip(),
+        'cidade':    None if _vazio(row.get('cidade')) else str(row.get('cidade')).strip(),
         'bairro':    bairro_final,
         'rua':       rua_final,
     }
@@ -183,7 +192,7 @@ def main():
     print('=' * 60)
 
     print(f'📂 Lendo: {ARQUIVO_EXCEL}')
-    df_entrada = pd.read_excel(ARQUIVO_EXCEL)
+    df_entrada = pd.read_excel(ARQUIVO_EXCEL, header=None)
 
     # Pega a primeira coluna, seja qual for o nome dela
     cpfs = df_entrada.iloc[:, 0].dropna().astype(str).str.strip()
@@ -193,7 +202,9 @@ def main():
     cpfs = cpfs.str.replace(r'\.0$', '', regex=True)
     cpfs = cpfs.str.zfill(11)
     cpfs = cpfs[cpfs.str.match(r'^\d{11}$')]
-    print(f'✅ {len(cpfs)} CPFs encontrados na planilha')
+    total_bruto = len(cpfs)
+    cpfs = cpfs.drop_duplicates()
+    print(f'✅ {len(cpfs)} CPFs únicos encontrados ({total_bruto - len(cpfs)} duplicatas removidas)')
     print()
 
     # Consulta a FullConsig para cada CPF
@@ -223,6 +234,13 @@ def main():
 
     df_validos = df_validos[df_validos['status_consulta'] == 'sucesso'].copy()
     print(f'📊 {len(df_validos)} clientes válidos para importar')
+
+    ARQUIVO_IMPORTACAO = f'clientes_para_importar_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+    df_validos.to_csv(ARQUIVO_IMPORTACAO, index=False, encoding='utf-8', sep=';')
+    print(f'💾 CSV de importação salvo: {ARQUIVO_IMPORTACAO}')
+    print()
+    print('👀 Revise o arquivo acima antes de continuar.')
+    input('▶  Pressione ENTER para iniciar o cadastro ou Ctrl+C para cancelar... ')
     print()
 
     df_validos['status_importacao']  = 'pendente'
@@ -241,8 +259,8 @@ def main():
     print()
 
     for i, (idx, row) in enumerate(df_validos.iterrows(), start=1):
-        nome = str(row['NOME_CLIENTE']).strip()
-        cpf  = limpar_cpf(row['CPF'])
+        nome = str(row.get('nome', '')).strip()
+        cpf  = limpar_cpf(row['cpf'])
         rua_debug, bairro_debug = separar_rua_bairro(row.get('rua'))
 
         print(f'[{i}/{total}] {nome} — CPF: {cpf}')
@@ -250,9 +268,8 @@ def main():
         print(f'    📍 Bairro: {bairro_debug}')
 
         # Checa se CPF já existe no sistema antes de cadastrar
-        cpf_checar = limpar_cpf(row['CPF'])
         try:
-            resp_check = requests.get(f'{BASE_URL}/clientes?cpf={cpf_checar}', timeout=10)
+            resp_check = requests.get(f'{BASE_URL}/clientes?cpf={cpf}', timeout=10)
             if resp_check.status_code == 200:
                 df_validos.at[idx, 'status_importacao']  = 'duplicado'
                 df_validos.at[idx, 'detalhe_importacao'] = 'CPF já existe no sistema'
@@ -300,7 +317,7 @@ def main():
     if falhas > 0:
         print('— Clientes que falharam —')
         for _, r in df_validos[df_validos['status_importacao'] == 'falha'].iterrows():
-            print(f'  {r["NOME_CLIENTE"]} | {r["CPF"]} | {r["detalhe_importacao"]}')
+            print(f'  {r.get("nome", "sem nome")} | {r["cpf"]} | {r["detalhe_importacao"]}')
 
     print()
     print('🏁 Importação concluída!')
