@@ -1310,6 +1310,68 @@ def consulta_fullconsig(cpf):
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
+@app.route('/debug-fullconsig/<cpf>', methods=['GET'])
+def debug_fullconsig(cpf):
+    global _sessao_fullconsig
+    import re, json
+    from bs4 import BeautifulSoup
+    
+    resultado_debug = {
+        "cpf": cpf,
+        "sessao_existe": _sessao_fullconsig is not None,
+        "tentativas": []
+    }
+    
+    # Verifica sessão
+    if _sessao_fullconsig is None:
+        get_sessao_fullconsig()
+        resultado_debug["sessao_criada"] = True
+    
+    resp_check = _sessao_fullconsig.get("https://sistema.fullconsig.com.br/home/home")
+    resultado_debug["check_home"] = {
+        "status": resp_check.status_code,
+        "url_final": str(resp_check.url),
+        "tem_loginForm": 'loginForm' in resp_check.text,
+        "primeiros_200_chars": resp_check.text[:200]
+    }
+    
+    # Testa cada convênio individualmente
+    convenios = ['inss', 'siape', 'governo', 'clt', 'prefeitura', 'forcasArmadas', 'veiculos', 'bolsa']
+    
+    for convenio in convenios:
+        if convenio == 'clt':
+            url = "https://sistema.fullconsig.com.br/clt/promosysClt"
+        elif convenio == 'prefeitura':
+            url = "https://sistema.fullconsig.com.br/prefeitura/promosysPrefeitura"
+        else:
+            url = "https://sistema.fullconsig.com.br/consulta/validaConsultaOffline"
+        
+        resp = _sessao_fullconsig.post(
+            url,
+            data={"consulta": convenio, "valor": cpf, "valorTelefone": "", "telefone": "false"}
+        )
+        
+        try:
+            dados = resp.json()
+            html = dados.get("consulta", "")
+        except:
+            html = resp.text
+            dados = {}
+        
+        soup = BeautifulSoup(html, "html.parser")
+        spans = soup.find_all('span', class_='inss-data-label')
+        
+        resultado_debug["tentativas"].append({
+            "convenio": convenio,
+            "status_http": resp.status_code,
+            "json_keys": list(dados.keys()) if isinstance(dados, dict) else "não é dict",
+            "html_len": len(html),
+            "tem_loginForm_no_html": 'loginForm' in html,
+            "tem_Nome_span": any('Nome' in s.get_text() for s in spans),
+            "primeiros_300_html": html[:300]
+        })
+    
+    return jsonify(resultado_debug), 200
 
 # =============================================
 # COMANDO PARA PROCESSAR OPORTUNIDADES (ROBÔ)
